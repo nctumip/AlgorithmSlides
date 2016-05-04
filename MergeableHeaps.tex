@@ -1,0 +1,582 @@
+\documentclass{beamer}
+\usepackage{amsmath,amssymb}
+\usepackage{epsfig}
+\begin{document}
+\begin{frame}{}
+\centerline{Binomial Heap}
+\begin{itemize}
+\item A kind of {\it \bf Mergeable Heaps},
+\item Support operations
+\begin{itemize}
+\item {\sc Make-Heap()}, creates and returns a new heap containing no elements.
+\item {\sc Insert($H,x$)}, insert node $x$ into heap $H$. 
+\item {\sc Minimum($H$)}, returns a pointer to the minimum in $H$.
+\item {\sc Extract-Min($H$)} deletes the minimum from $H$, retunrs a pointer pointing to the node.
+\item {\sc Union($H_1,H_2$)}, creates and returns a new heap that contains all the nodes of heaps $H_1$ and $H_2$. 
+ $H_1$ and $H_2$ are destroyed. 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item Also support
+\begin{itemize}
+\item {\sc Decrease-Key}($H,x,k$), assign to node $x$
+ within heap $H$ the new key value $k$, which is assumed to be no gerater than its current key value. 
+\item {\sc Delete($H,x$)}, delete $x$ from heap $H$. 
+\end{itemize}
+\item {\sc Search} cannot be done fast
+\item {\sc Decrease-Key} and {\sc Delete}, we assume that there is a pointer pointing to the node. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{table} 
+\begin{tabular}{lccc}
+			&Binary heap	&Binomial heap & Fibonacci heap \\
+Procedure        	&   (Worst-case) 	&   (worst-case) 	&  (amortized)\\
+\hline
+ {\sc Make-Heap }	& $\Theta(1)$                 	& $\Theta(1)$                   	& $\Theta(1)$ \\
+{\sc Insert}     	& $\Theta(\lg n)$ 			& $O(\lg n)$ 				& $\Theta(1)$ \\
+{\sc Minimum} 	& $\Theta(1)$ 				& $O(\lg n)$ 		 		& $\Theta(1)$  \\
+{\sc Extract-Min} & $\Theta(\lg n)$				& $\Theta(\lg n)$ 	 		& $\Theta(\lg n)$ \\
+{\sc Union} 	& $\Theta(n)$ 				& $O(\lg n)$ 	 			& $\Theta(1)$  \\
+{\sc Decrease-Key} & $\Theta(\lg n)$ 			& $\Theta(\lg n)$  			& $\Theta(1)$  \\
+{\sc Delete} 	& $\Theta(\lg n)$ 			& $\Theta(\lg n)$ 			& $O(\lg n)$  \\
+\end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Binomial Tree and Binomial Heap}
+\begin{itemize}
+\item {Binomial Tree, $B_k$}
+\item An ordered tree, defined recursively
+\item $B_0$ consists of a single node
+\item $B_k$ consists of two binomial trees $B_{k-1}$ that are linked together.
+\item Root of one is the left most child of the root of the other. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large \it Lemma, Properties of binomial trees}
+\vspace{0.5cm}
+For the binomial tree $B_k$,
+\begin{enumerate}
+\item there are $2^k$ nodes,
+\item the height of the tree is $k$,
+\item there are exactly $\left (  \begin{array}{c} k \\ i  \end{array}\right )$ (binomial coefficient) nodes at depth $i$
+ for $i=0, 1, \ldots, k$, and 
+\item the root has degree $k$, which is greater than that of any other node; moreover if the
+children of the root are numbered from left to right by $k-1$, $k-1$, \ldots, 0, child $i$
+is the root of the subtree $B_i$.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Proof of the 4 Properties}
+\vspace{0.5cm}
+\begin{itemize}
+\item By induction on $k$. 
+\item The basis is the binomial tree $B_0$. 
+\item Verifying that each property hoids for $B_0$ is trival. 
+\item For the inductive step, we assume that the lemma holds for $B_{k-1}$
+\end{itemize}
+Property 1: Binomial tree $B_k$ consists of two copies of $B_{k-1}$ (each has $2^{k-1}$ nodes, from the inductive basis).
+$B_k$ has $2^{k-1}$ + $2^{k-1}$ = $2^k$ nodes. 
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Proof of the 4 Properties}
+\vspace{0.5cm}
+Property 2: $B_k$ is obtained by linking two $B_{k-1}$s together, one is the left most child of the other. 
+Thus the depth of $B_k$ is one greater that $B_{k-1}$. $B_{k-1}$ has depth $(k-1)$ from the inductive basis.
+Depth of $B_k$ = $(k-1) +1 =k$.
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Proof of the 4 Properties}
+Property 3: Let $D(k,i)$ be the number of nodes at depth $i$ of $B_k$. Depth $i$ in $B_k$
+ consists of nodes in depth $i$ in one $B_{k-1}$ and depth $i-1$ in another $B_{k-1}$. They have
+ $D(k-1,i)$ and $D(k-1,i-1)$ nodes respectively (induction hypothesis). 
+\begin{eqnarray}
+D(k,i) &=& D(k-1,i) + D(k-1,i-1) \nonumber\\
+ &=& \left (  \begin{array}{c} k-1 \\ i  \end{array}\right ) + \left (  \begin{array}{c} k-1 \\ i-1  \end{array}\right ) \nonumber\\
+ &=& \left (  \begin{array}{c} k \\ i  \end{array}\right ) \nonumber
+\end{eqnarray}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Proof of the 4 Properties}
+Property 4: Root of $B_k$ (connecting two $B_{k-1}$) has one more degree than root of $B_{k-1}$ (degree k-1). \\
+Children of $B_{k-1}$ from left to right are $B_{k-2}$, $B_{k-3}$, \ldots, $B_1$, $B_0$.  
+$B_k$ is obtained by connecting a $B_{k-1}$ to that $B_{k-1}$, we have the subtree from left to right
+ $B_{k-1}$, $B_{k-2}$, $B_{k-3}$, \ldots, $B_1$, $B_0$. 
+\end {frame}
+
+\begin{frame}{}
+{ Corrolary } The maximum degree of any node in an $n$-node binomial tree is $\lg n$.\\
+{ Proof } Immediate from Properties 1 and 4 of previous lemma. 
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Binomial Heap}
+\vspace{0.5cm}
+A binomial heap $H$ is a set of binomial trees that satisfies the {\it binomial-heap} properties. 
+\begin{enumerate}
+\item Each binomial tree in $H$ obeys the {\it min-heap property}: the key of a node is greater than
+ or equal to the key of its parent. We say that each such tree is {\it min-heap-ordered}. 
+\item For any nonnegative integer $k$, there is at most one binomial tree in $H$ whose root has degree $k$. 
+\end{enumerate}
+From 1, the root of a min-heap-ordered tree contains the smallest key. From 2, an $n$-node binomial heap $H$
+consists of at most $\lfloor \lg n\rfloor +1$ binomial trees. 
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Representing Binomial Heaps} 
+\vspace {0.5cm}
+\begin{itemize}
+\item A binomial tree is stored in the left-child, right-sibling representation.
+\item Each node has a key field and any other satellite information.
+\item a node $x$ has a pointers $p[x]$ to its parent, $child[x]$ to its leftmost child, abd $sibling[x]$
+ to the sibling of $x$ immediately to its right. 
+\item $x$ also has a field $degree[x]$, which is the number of children of $x$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Representing Binomial Heaps} 
+\vspace {0.5cm}
+\begin{itemize}
+\item Roots of the binomial trees within the binomial heaps are organized in a linked list, which we refer to as the {\it root list}. 
+The degree of the roots strictly increase as we traverse the root list. 
+\item a pointer $head[H]$ points to the first root in the root lost. 
+\item By 2nd binomial heap property, degrees of roots are a subset of $\{ 0,1,\ldots, \lfloor \lg n\rfloor\}$ (length of the root list
+is $O(\log n)$).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Operations in Binomial Heaps}
+\vspace{0.5cm}
+\begin{itemize}
+\item Creating a new binomial heap, return $head[H]$={ Nil}, running time is $\Theta(1)$.
+\item Finding the minimum key, check all roots along the root list. There are at most $\lfloor \lg n\rfloor +1 $ roots,
+can be done in $O(\lg n)$ time. 
+\item Uniting two binomial heaps, biasic idea is to ``merge'' tow root list, then fix the root list
+to meet the 4th property of binomial tree. If there are trees have same number of nodes (two $B_{k-1}$), link them
+to form a $B_k$. After that there are at most 3 $B_k$s, can be done in $O(\lg n)$ time. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Operations in Binomial Heaps}
+\vspace{0.2cm}
+\begin{itemize}
+\item Inserting a node, create a one node binominal heap $H'$ in $O(1)$ time, then uniting with the $n$-node binomial heap
+ $H$ in $O(\lg n)$ time. 
+\item Extracting the node with minimum key, 
+\begin{itemize}
+\item Remove the tree, let it be $B_k$, has the smallest from the root list (findi it in $O(\lg n)$ time, remove it in $O(1)$ time). 
+\item Delete the root, we then have a forest, from let to right are trees $B_{k-1}$, $B_{k-2}$, \ldots, $B_0$ (properyt 4). 
+\item Reverse them and link them into a root list to form a binomial heap ($O(\lg n)$) time.
+\item Uniting the two binominal heap in $O(\lg n)$ time. 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Operations in Binomial Heaps}
+\vspace{0.5cm}
+\begin{itemize}
+\item {\sc Search} is hard, so we assuome that there is a pointer pointing to node to be decreasing key or deleting. 
+\item Decreasing a key, same as the binary heap, bubbling up the node toward the root of the tree, height is $O(\lg n)$. 
+\item Deleting a key, make the key value to be $-\infty$ then decreasing key. The node goes to the root, then extracting
+ the node with minimum key. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fibonacci Heap}
+
+A kind of Mergeable Heaps, support operations
+\begin{itemize}
+\item {\sc Make-Heap()}
+\item {\sc Insert($H,x$)}
+\item {\sc Minimum($H$)}
+\item {\sc Extract-Min($H$)}
+\item {\sc Union($H_1,H_2$}
+\item {\sc Decrease-Key($H,x,k$)}
+\item {\sc Delete($H,x$)}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{table} 
+\begin{tabular}{lccc}
+			&Binary heap	&Binomial heap & Fibonacci heap \\
+Procedure        	&   (Worst-case) 	&   (worst-case) 	&  (amortized)\\
+\hline
+ {\sc Make-Heap }	& $\Theta(1)$                 	& $\Theta(1)$                   	& $\Theta(1)$ \\
+{\sc Insert}     	& $\Theta(\lg n)$ 			& $O(\lg n)$ 				& $\Theta(1)$ \\
+{\sc Minimum} 	& $\Theta(1)$ 				& $O(\lg n)$ 		 		& $\Theta(1)$  \\
+{\sc Extract-Min} & $\Theta(\lg n)$				& $\Theta(\lg n)$ 	 		& $\Theta(\lg n)$ \\
+{\sc Union} 	& $\Theta(n)$ 				& $O(\lg n)$ 	 			& $\Theta(1)$  \\
+{\sc Decrease-Key} & $\Theta(\lg n)$ 			& $\Theta(\lg n)$  			& $\Theta(1)$  \\
+{\sc Delete} 	& $\Theta(\lg n)$ 			& $\Theta(\lg n)$ 			& $O(\lg n)$  \\
+\end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}{Fibonacci Heap}
+\begin{itemize}
+\item Good for the cases where {\sc Extract-Min} and {\sc Delete} are few, better if there are many {\sc Decrease-Key}s. 
+\item {\sc Decrease-Key} can be done in $\Theta(1)$ amortized time. Case happens when we are looking for single-source shortest path in a graph. 
+\item Theoretical interest. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Fibonacci Heap}
+A Collection of rooted min-heap-ordered trees, not constrained to be binomial trees. Each Node $x$,
+\begin{itemize}
+\item $x.p$, $p$ a pointer to its parent. 
+\item $x.child$, $child$ is a pointer to one of its children. 
+\item $children$ of $x$ are in a circular doubly linked list, called {\it child list} of $x$. 
+\item $x.degree$, {\it degree} number of nodes in the {\it child list}. 
+\item {\it x.mark} indicates that whether $x$ has lost a child since the last time {\it x} was made the child of another node. 
+\begin{itemize}
+\item {\it x} is unmarked if it is newly created. 
+\item {\it x} is unmarked if is made child of another node. 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item A Fibonacci heap {\it H},  {\it X.min} points to the root of the tree that has the smallest key. This node is called
+ the {\it minimum node}. 
+\item The roots of all the trees are linked together into a circular, doubly linked list, called the {\it root list}. 
+\item $H.n$, the number of nodes currently in the heap. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Potential Function}
+\begin{itemize}
+\item Given a Fibonacci heap $H$
+\begin{itemize}
+\item $t(H)$, the number of trees in the root list of $H$.
+\item $m(H)$, the number of marked nodes in $H$. 
+\item Potential function \begin{equation}\Phi(H)=t(H)+2m(H). \label{1}\end{equation}
+\item The potential of a set of Fibonacci heaps is the sum of the potentials of its constituent Fibonacci heap. 
+\item Assume that a unit of potential can pay for a constant amount of work. 
+\end{itemize}
+\item Potential of the heap in Figure 19.2 is 5+2*3=11. 
+\end{itemize}
+\end{frame} 
+
+\begin{frame}{Potential Function}
+\vspace{0.5cm}
+\begin{itemize}
+\item Assume that we start with an empty heap.
+\item Above equation is non-negative at all subsequence time, the amortized cost covers the actual cost. 
+\item Assume that there is known upper bound for $D(n)$ on the maximum degree of any node in an $n$-node
+Fibonacci heap (for amortixed analysis purpose). 
+\item  $D(n)\le \lfloor \lg n\rfloor$ at this time, state without proof. 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Mergeable-Heap Operations}
+%\centerline{\large }
+\begin{itemize}
+\item Delay work as long as possible. 
+\item {\sc Insert} and {\sc Union} work on the root list, make sure $H.min$ points to the minimum. 
+\item Work delay to {\sc Delete} or {\sc Extract-Min}, after deleting, {\sc Consolidate} is required. 
+\item After {\sc Consolidate}, each node in the root list has a degree that is unique within the root list, thus the size of the root list is at most $D(n)+1$.
+\end{itemize}
+\end{frame}
+
+%\begin{frame}{}
+%\centerline{\large Mergeable-Heap Operations}
+%\vspace{0.5cm}
+%\begin{itemize}
+%\item If an $n$-node Fibonacci heap is a collection of unordered binomial trees, $D(n)=\lg n$. 
+%\item Results of {\sc Decrease-Key} and {\sc Delete} are not unordered binomial trees, 
+%thus $D(n)$ shall be bounded by non-trival arguments. 
+%\end{itemize}
+%\end{frame}
+
+\begin{frame}{{\sc Create} and {\sc Minimum}}
+%\centerline{\large {}}
+\vspace{0.5cm}
+\begin{itemize}
+\item Create a new Fibonacci heap, actual cost $O(1)$, potential $\Phi(H)=0$, amortized cost is $O(1)$. 
+\item Finding the minimum, follow the pointer $min[H]$. Potential does not change, actual cost is $O(1)$,
+thus amortized cost is $O(1)$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Inserting a node}
+%\centerline{\large }
+\begin{itemize}
+\item Allocate a new node $x$, $x$ is unmarked, and insert $x$ into the root list.
+ Update {\it H.min} if necessary. 
+\item Make no attempt to consolidate the trees within the Fibonacci heap. 
+\item The amortized cost: 
+\begin{itemize}
+ \item $H$ the input, $H'$ the resulting Fibonacci heap
+ \item $t(H')=t(H)+1$, $m(H')=m(H)$
+ \item Increase in potential is $((t(H)+1+2m(H))-(t(H)+2m(H)))=1$.
+ \item Actual cost is 1, thus amortized cost is $O(1)$. 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Uniting two Fibonacci heaps}
+%\centerline{\large }
+\begin{itemize}
+\item Given $H_1$, $H_2$, concatenate the root list of $H_1$ and $H_2$,
+ then determine the new minimum node.
+\item No consolidation of trees occurs.
+\item Potential change $\Phi(H)-(\Phi(H_1)+\Phi(H_2)) =0$, since $t(H)=t(H_1)+t(H_2)$
+ and $m(H)=m(H_1)+m(H_2)$. 
+\item The actual cost is $O(1)$ since doubly linked list is used. 
+\item Amortized cost is $O(1)$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Extracting the minimum node}
+%\centerline{\large }
+\vspace{0.5cm}
+\begin{itemize}
+\item Delete the minimum $z$, making all $z$'s children roots of $H$. 
+\item $H.min$ points to a node ($z.right$) in the root list, not necessary to be the minimum. 
+\item Then reduce the number of trees in the root list, i.e., Consolidating the root list. 
+\item Finally, $H.min$ points to the minimum and return $z$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Extracting the minimum node}
+%\centerline{\large }
+\vspace{0.5cm}
+\begin{itemize}
+\item {\sc Consolidate}
+\begin{enumerate}
+\item Find two roots $x$ and $y$ in the root list with the same degree, where $x.key\le y.key$. 
+\item Link $y$ to $x$: remove $y$ from the root list and make $y$ a child of $x$. 
+\item $x.degree$ is incremented and mark on $y$ clear. 
+\end{enumerate}
+\item {\sc Consolidate} needs an auxiliary array $A[0..D(n(H))]$,
+\item $A[i]=y$, $y$ is currently a root with $y.degree=i$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Extracting the minimum node}
+%\centerline{\large }
+\begin{itemize}
+\item $H$ the Fibonacci heap just prior to deleting the minimum.
+\item The actual cost
+\begin{itemize}
+\item $O(D(n))$ contribution comes from there being at most $D(n)$ children of $z$, and last step to 
+ consolidate.
+\item Scan the root list and trees merging:
+\begin{itemize}
+\item Size of the root list before conolidation: at most $D(n)+t(H)-1$; used to be $t(H)$, ``-1''
+ remove $z$, $z$ has at most $D(n)$ children that become roots of trees.
+\item Each merging removes a tree, total number of mergings $<D(n)+t(H)$.
+\end{itemize}
+\end{itemize}
+\item Actual cost is $O(D(n)+t(H))$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Extracting the minimum node}
+%\centerline{\large }
+\begin{itemize}
+\item Potential changes
+\begin{itemize}
+\item Before extracting the minimum node, $t(H)+2m(H)$.
+\item After extracting the minimum node, at most $(D(n)+1)+2m(H)$ since at most $D(n)+1$ roots remains
+and no nodes become marked. 
+\end{itemize}
+\item Amortized cost
+\begin{eqnarray}
+ & & O(D(n)+t(H)) + ((D(n)+1)+2m(H)-(t(H)+2m(H))) \nonumber \\
+ &=& O(D(n)) + O(t(H)) -t(H) \nonumber \\
+ &=& O(D(n)) \nonumber
+\end{eqnarray}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Decreasing a key}
+
+%\centerline{\large }
+\vspace{0.5cm}
+\begin{itemize}
+\item Check whether decreasing key change anything (if $x.key$ still greater than $x.p.key$, or $x$ is the root). 
+\item Decreasing the key in node $x$
+\item Cutting $x$, cut the link between $x$ and its parent $y$,
+\item Making $x$ a root, unmark $x$,
+\item Mark $y$ if $y$ is unmarked, otherwise {\sc Cascading-Cut}, i.e., cut $y$ and recursively do so. 
+\item Finally, change $H.min$ if necessary (since only key of $x$ was decreased, $H.min$ remains or points to $x$). 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Decreasing a key}
+
+%\centerline{\large }
+%\vspace{0.5cm}
+\begin{itemize}
+\item The {\it mark} field records history information of the node $x$. Suppose that he following events have happened to node $x$,
+\begin{enumerate}
+\item at some time, $x$ was a root,
+\item then $x$ was linked to another node,
+\item  two children of $x$ were removed by cuts. 
+\end{enumerate}
+\item $x$ becomes a new root once its second child is removed. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Decreasing a key}
+\begin{itemize}
+\item Actual cost
+\begin{itemize}
+\item Decrease key takes $O(1)$ time +
+\item Cascading cuts, if {\sc Cascading-Cut} is recursively called $c$ times, it takes $O(c)$ time
+\end{itemize}
+\item Changes in Potential
+\begin{itemize}
+\item Each recursive call of {\sc Cascading-Cut}, except the last one, cuts a marked node and clears the marked field. 
+\item Afterward, there are $t(H)+c$ trees (used to be $t(H)$ trees, $c-1$ trees produced by cascading cuts,
+ and $x$). 
+\item At most $m(H)-c+2$ marked nodes ($c-1$ were unmarked by cascading cuts, last call of {\sc Cascading-Cut}
+makrs a node)
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Decreasing a key}
+\vspace{0.5cm}
+\begin{itemize}
+\item Changes of Potential: $((t(H)+c)+2(m(H)-c+2))$ - (t(H)+2m(H)) = $4-c$.
+\item Amortized cost, $O(c)+4$ - $c$ = $O(1)$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+{\centerline{\large Deleting a node $x$}}
+\begin{itemize}
+\item Decreasing the key in $x$ to $\infty$,
+\item then extracting minimum.
+\item The armotized cost are respectively $O(1)$ and $O(D(n))$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item Prove the amortized time of a {\sc Fib-Heap-Extract-Min} and {\sc Fib-Heap-Delete} is $O(\lg n)$,
+\item To show the upper bound $D(n)$ on the degree of any node of a $n$ node Fibonacci Heap is $O(\lg n)$. 
+\item If trees in Fibonacci are unordered binomial tree, we have $D(n)=\lfloor \lg n\rfloor$.
+\item But {\sc Cut} make trees that are not unordered binominal tree. 
+\item To prove the $\lg n$ upper bound becomes not trival. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large To bound $D(n)$}
+\begin{itemize}
+\item Show that because we cut a node from it parent as soon as it loses two children, $D(n)$ is $O(\lg n)$. 
+\item In particular $D(n)\le \lfloor \log_{\phi}n\rfloor $, where $\phi=(1+\sqrt{5})/2$
+\item Key idea of th proof, for each node $x$, define $size(x)$ to be the number of nodes, including $x$,
+ in the subtree rooted at $x$. 
+\item And show that $size(x)$ is exponential in $degree[x]$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+{\bf\it Lemma} Let $x$ be in a Fibonacci heap, and suppose that $degree[x]=k$. Let
+$y_1$, $y_2$, \ldots, $y_k$ denote the children on $x$ in the order in which there were linked to $x$.
+Then, $degree[y_1]\ge 0$ and $degree[y_i]\ge i-2$ for $i=2, 3, \ldots, k$. \\
+{\bf\it Proof} Obviously, $degree[y_1]\ge 0$. For $i\ge 2$, note that when $y_i$ was linked to $x$, all of
+$y_1$, $y_2$, \ldots, $y_{i-1}$ were children of $x$, so $degree[x]=i-1$. Node $y_i$ is linked to $x$
+only if $degree[x]=degree[y_i]$, so we must have had $degree[y_i]=i-1$. Since then $y_i$ could lost
+one child, since it would have been cut from $x$ if it had lost two children. We conclude that $degree[y_1]\ge i-2$. 
+\end{frame}
+
+\begin{frame}{}
+For $k=0,1,2,\ldots, $ the $k$th Fibonacci number is defined recursive
+$$F_k=\left\{
+\begin{array}{lll}
+0 & {\rm \ if\ } & k=0, \\
+1 & {\rm \ if\ } & k=1, \\
+F_{k-1}+F_{k-2} & {\rm \ if\ } & k\ge 2. 
+\end{array}
+ \right.$$
+The lemma gives another way to express $F_k$. \\
+{\it Lemma } For all integer $k\ge 0$, $$F_{k+2}=1+\sum^k_{i=0}F_i. $$
+\end{frame}
+
+\begin{frame}{}
+{\it Proof} Induction on $k$: When $k=0$
+\begin{eqnarray}
+1+\sum^0_{i=0}F_i &=& 1+F_0    = 1+0   =  1 \nonumber \\
+   &=& F_2. \nonumber
+\end{eqnarray} 
+Assume the inductive hypothesis that $F_{k+1}=1+\sum^{k-1}_{i=0}F_i$, then we have
+\begin{eqnarray}
+F_{k+2} &=& F_k+F_{k+1} \nonumber \\
+  &=& F_k + (1+\sum_{i=0}^{k-1}F_i) \nonumber \\
+  &=& 1 + \sum^{k}_{i=0}F_i \nonumber
+\end{eqnarray}
+\end{frame}
+
+\begin{frame}{}
+Use the inequality $$F_{k+2}\ge \phi^k$$ to show the following lemma, \\
+where $\phi=(1+\sqrt{5})/2=1.61803$ is the golden ratio. \\
+And we shall argue that $Size[x] > F_{k+2}$.  
+\end{frame}
+
+\begin{frame}{}
+{\it Lemma} Let $x$ be any node in a Fibonacci heap, and let $k=degree[x]$. Then $size(x) \ge F_{k+2}\ge \phi^k$. \\
+{\it Proof} Let $s_k$ denote the minimum possible value of $size(z)$ over all nodes $z$, s.t. $degree[z]=k$. \\
+$s_0=1$, $s_1=2$, and $s_2=3$. \\
+Let $y_1$, $y_2$, \ldots, $y_k$ denote the children of $x$ in the order in which there were linked to $x$. We would like to compute the 
+lower bound on $size(x)$. 
+\begin{enumerate}
+\item count 1 for $x$,
+\item count 1 for the first child $y_1$ (since $size(y_1)\ge 1$). 
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{}
+We have 
+\begin{eqnarray}
+size(x) &\ge& s_k \\
+ & = & 2 + \sum_{i=2}^{k}s_{degree[y_i]} \\
+ & \ge & 2 + \sum^k_{i=2}s_{i-2}
+\end{eqnarray}
+We then show by induction on $k$ that $s_k\ge F_{k+2}$, $\forall k\ge 0$. 
+\end{frame}
+
+\begin{frame}{}
+Bases, $k=0$, $k=1$, trival. \\
+Inductive step, assume that $k\ge 2$ and that $s_i\ge F_{i+2}$. 
+\begin{eqnarray}
+s_k &\ge& 2 + \sum^k_{i=2}s_{i-2} \\
+ &\ge& 2 + \sum^k_{i=2} F_i \\
+ & =& 1 + \sum^k_{i=0}F_i \\
+ & = & F_{k+2}.
+\end{eqnarray}
+We conclude that $size(x)\ge s_k\ge F_{k+2}\ge \phi^k$. 
+\end{frame}
+
+\begin{frame}{}
+\vspace{0.5cm}
+{\it Corollary} The maximum degree $D(n)$ of any node in an $n$-node Fibonacci heap is $O(\lg n)$. \\
+{\it Proof} $x$ a node in $n$-node Fibonacci heap and $k=degree[x]$. Above lemma says $n\ge$ $size(x) \ge \phi^k$. Taking 
+base-$\phi$ logarithms results $k\le \log_\phi n$, i.e., the maximum degree $D(n)$ of any node is $O(\lg n)$. 
+\end{frame}
+
+\end{document}
