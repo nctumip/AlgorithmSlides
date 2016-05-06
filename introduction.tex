@@ -1,0 +1,1011 @@
+% Slide.tex
+% use "slitex" to compile it
+% if no "slitex" found, just use "latex"
+% use "dvips -t landscape" to product landscape postscript 
+%\documentstyle[shadow,psfig,epsf]{slides}
+%\documentstyle[shadow,psfig,epsf]{slides}
+%\documentclass{prosper}
+\documentclass{beamer}
+
+
+\usepackage{amsmath,amssymb}
+\usepackage{epsfig}
+
+
+% page numbering
+%\pagestyle{plain}
+\begin{document}\begin{frame}{}
+\vspace{1in}
+\begin{center}
+{\Large Design and Analysis of Algorithm\\}
+{\bf Yu-Tai Ching\\}
+{Department of Computer Science\\
+National Chiao-Tung University}
+\end{center}
+%\begin{itemize}
+%\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item Lecture in English, 
+\item Book, Introduction to Algorithms, 3rd edition, The MIT Press. 
+\item At most 3 programming assignment. 
+\item Maybe some quizzes. 
+\item Midterm exam and Final exam. 70\%. 
+\item If you have ever taken my data structure course, probably you can consider to take this course form other professors. 
+\item I can add at most 8, so
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item An introduction, sorting algorithms, asymptotic notations, recursion, 
+\item balance tree, red-black tree, 
+\item divide and conquer, prune and search, greedy approach, dynamic programming, amortized analysis,
+\item graph algorithm,
+\item lower bound to a computational problem, decision tree model, reduction,
+\item graph algorithms, 
+\item NP
+\item hopefully, parallel algorithm, FFT, Linear programming, ...
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Algorithm}
+\end{center}
+\begin{itemize}
+\item Directions to solve a problem
+\item To build a DIY furniture
+\item How to come to NCTU from Taipei
+\item ``directions''=steps
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Algorithm}
+\end{center}
+\begin{itemize}
+\item In Computer Science, computer algorithms defined under the RAM model
+\item RAM, Random Access Machine, there are finite number of instructions,
+  +, -, *, ... .  These instructions are basic enough (assembly language
+ of X86).  There are infinite number of memory, direct (random) 
+access, retrieve and store in constant time.  
+\item An algorithm, a sequence of finite number instructions, if follows,
+ accomplish a specific task (a computational problem), ({\it Solve a problem}). 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+A Computational Problem, Sorting Problem
+\end{center}
+\begin{itemize}
+\item Sorting Problem: Given $n$ numbers, determine a permutation so that they are arranged in
+ non-decreasing order. 
+\item Given $n$=5 numbers 1, 10, 9, 4, and 5, this is an ``instance'' for the sorting problem.  
+\item {\small You design a sequence of instructions (instruction that can fit
+ into machine instructions).  Run the instructions (each instruction = a step) to solve the problem,
+ (to arrange the numbers).  Correct for all possible input {\it instances}
+ of any size (how can you make sure?).  Then you have a correct algorithm to 
+ sorting problem.  }
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Algorithm and Program
+\end{center}
+\begin{itemize}
+%\item Algorithm and Program
+\item Algorithm will be translated into program to fit into a computer, or
+\item a program is an implementation of an algorithm
+\item Correctness of algorithm based on mathematics,
+\item correctness of algorithm doesn't imply the correctness of the
+ program.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Performance of an Algorithm
+\end{center}
+\begin{itemize}
+\item How to evaluate the performance of an algorithm?
+\item Transfer algorithm to a program, run the program, and record the time?
+\item Time depends on a particular input instance.
+\item Time depends on the machine.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Performance of an Algorithm
+\end{center}
+\begin{itemize}
+\item Under RAM model
+\item Recall that, operators are basic enough, thus can be done in constant
+ time; memory access in constant.
+\item Calculate the number of operations required and present the time
+ required as a function of the input size.  
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{}
+\begin{center}
+Performance of an Algorithm
+\end{center}
+\begin{itemize}
+\item An insertion sort example $_{\rm draw\ a\ picture}$
+\item Given $n$ numbers, stored in an array,
+\item initially, the first one is sorted,
+\item each iteration, we increase the length of the sorted list by 1.  
+\item After the $i$th iteration, we have a sorted sequence of length $i$.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Performance of an Algorithm
+\end{center}
+\begin{itemize}
+\item How many steps does it take for the $i$th iteration?
+\item two parameters, 
+\item {\rm How\ many\ are\ compared?}
+\item {\small How many basic operations does it take
+ to compare one?  To compare one, load from memory, compare, if $>$ key then
+ store in the next position, if i$<$ key, done. 
+ Constant number of steps, $c_1$,
+ each step takes constant time, $c_2$ (clock cycle), one move takes $c_1c_2$
+ time, it still constant.  }
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Performance of an Algorithm
+\end{center}
+\begin{itemize}
+\item How many are compared
+\item best case, compare one and no stores are required.
+\item worst case, each time you have a key which is smallest among the previous
+ sorted list, and thus you have to compare all.  
+\item generally follow the {\it worst case} convention.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Performance of an Algorithm
+\end{center}
+\begin{itemize}
+\item In the worst case, the $i$th iteration needs $i-1$ comparisons and
+ moving $i$ data (ignore constant)
+\end{itemize}
+$$ \sum_i^{n-1}i = \frac{n(n-1)}{2}$$
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Performance of an Algorithm
+\end{center}
+\begin{itemize}
+\item Correctness of the algorithm
+\item { Obvious when the length if 1 and 2.  Suppose it is correct
+ to insertion sort $i$ numbers, we have sorted sequence of length $i$.  
+ To process the $i+1$ number $k$, if $k$ $>$ A[$i$], done (sorted).  
+ If $k$ $<$ A[$i$], A[$i$] moves to A[$i+1$], we are inserting key to a sorted
+ sequence of length $i$.  Since the previous $n-1$ numbers are sorted,
+by induction, the algorithm correctly sort $n$ numbers. }
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Description of an Algorithm
+\end{center}
+\begin{itemize}
+\item Pseudo code
+\item PASCAL or C liked code
+\item Mixed with natural language
+\item many details are ignored
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Performance of an Algorithm
+\end{center}
+\begin{itemize}
+\item Another example, Selection Sort
+\item { first iteration, find smallest from $n$ numbers, $n$ steps,\\}
+{\small 2nd iteration, find smallest from $n-1$ numbers, $n-1$ steps,\\}
+{ ... \\}
+{ Find the smaller from the 2, and finally move the last to output list}
+\end{itemize}
+$$\sum(n-1)=\frac{(n+1)*n}{2}$$
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Performance of an Algorithm
+\end{center}
+\begin{itemize}
+\item Which one is more efficient, the insertion sort or the selection sort?
+\item Why?
+\item Is there a way to accurately convey this message? 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Asymptotic Notation $\Theta$ notation}
+
+{$\Theta$-Notation, asymptotic tight bound}
+\end{center}
+Given a function $g(n)$, $\Theta(g(n))$ is the set of functions \\
+$\Theta(g(n))$ = \{$f(n)| \exists$ positive constants $c_1$, $c_2$,
+ and $n_0$ s.t. $0\le c_1\cdot g(n)\le f(n)\le c_2\cdot g(n), \forall n>n_0\}$
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Asymptotic Notation
+\end{center}
+\begin{itemize}
+\item Insertion sort, 
+\item { in the worst case, $\Theta(n^2)$, best case is linear time, i.e.,
+  $\Theta(n^2)$ is not appropriate to describe the time complexity
+ of the insertion sort. } 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Asymptotic Notation
+\end{center}
+\begin{itemize}
+\item Selection sort
+\begin{itemize}
+\item{Best case, find the minimum at the first time, and compare with all the others,}
+\item {Worst case, find the largest at the first time, the you need to
+ compare with all the others, and each time, you find a smaller one. So you will need swap.}
+\item both cases need $n^2$ operations.
+\end{itemize}
+%\item which one best describe the time required.  
+\end{itemize}
+\end{frame}
+
+%\begin{slide}{}
+%\begin{center}
+%\end{center}
+%\begin{itemize}
+%\end{itemize}
+%\end{slide}
+
+\begin{frame}{}
+\begin{center}
+{\large Asymptotic Notation}
+
+{$O$-Notation, asymptotic upper bound}
+\end{center}
+%\begin{itemize}
+%\item 
+Given a function $g(n)$, $O(g(n)$ is the set of functions that
+$O(g(n))$=$\{f(n)|\exists$ positive constants $c$ and $n_0$, s.t.
+$0\le f(n) \le c\cdot g(n)$, $\forall n\ge n_0\}$
+%\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Asymptotic Notation}
+
+{Some Examples}
+\end{center}
+\begin{itemize}
+  \item Insertion Sort: $O(n^2)$ best describes time required for 
+    insertion sort
+  \item Binary Search: Given a sorted sequence stored in an array {\tt A}. 
+    Given $x$ and ask if $x$ is in the set.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{Binary Search}
+\end{center}
+\begin{itemize}
+\item Suppose $x$ could fall in between $i$ and $j$ in array {\tt A}
+\item compare $x$ against {\tt A[}$\frac{i+j}{2}${\tt ]}
+\item if $x={\tt A}[\frac{i+j}{2}]$, done.
+\item if $x<{\tt A}[\frac{i+j}{2}]$,if $x$ presents, $x$ can be in 
+  between $i$ to $\frac{i+j}{2}-1$.
+\item if $x>{\tt A}[\frac{i+j}{2}]$,if $x$ presents, $x$ can be in 
+  between $\frac{i+j}{2}+1$ to $j$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Binary Search
+\end{center}
+\begin{itemize}
+\item How fast we can find $x$, or we can make sure $x$ is not present?
+\item Best case?
+\item Worst case?
+\item Which one best describe the time required, $\Theta(\log n)$ or
+  $O(\log n)$?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Merge Sort}
+\end{center}
+\begin{itemize}
+\item Need another array.
+\item Consider the problem to merge two sorted sequence of length $n$.  
+\item ${\rm draw\ a\ figure}$
+\end{itemize}
+\epsfxsize 3.5in{
+\centerline{\epsfbox{merge.eps}}}
+%\input{merge.eps}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{ Merge Sort}
+\end{center}
+\begin{itemize}
+\item How many data elements moved? How many data elements compared?
+\item What is the total time for merging? $O(n)$ or $\Theta(n)$
+\item Question: How to get the 2 sorted lists?
+\item { Given 2 sorted sequences of length $\frac{n}{4}$, merge them
+  to get the sorted list of length $\frac{n}{2}$. Then how to get the
+  sorted sequences of length $\frac{n}{4}$? ...}
+\item $_{\rm draw\ the\ tree\ like\ figure}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Merge Sort
+\end{center}
+\begin{itemize}
+\item Each row ``$n$ moves'' + ``$<n$ comparisons''.  
+\item How many rows?
+\item Which is the best to describe the time complexity, $O(n\log n)$ or 
+ $\Theta(n\log n)$?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Two Issues Need to Discuss
+\end{center}
+\begin{itemize}
+\item Divide and Conquer: A technique to solve problem, very good especially
+ when proving the correctness of the algorithm. 
+\item Recursion: Fibonacci Series, define a function by itself.  
+\item MergeSort, Solve a problem 
+ by solving same but smaller problem. 
+\end{itemize}
+$$F(i)=F(i-1)+F(i-2), i>2$$
+$$ F(0)=0, F(1)=1 $$
+$${\rm boundary\ condition}$$
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Divide and Conquer- Recursion
+\end{center}
+\begin{itemize}
+\item Solve a problem by solving the same problems (obtained by dividing the original
+ problem) with smaller problem size,
+ then merge the solutions to get the solution to the original problem.
+\item Time required for merge sort $n$ numbers = 
+  Solve two sub problems of size $\frac{n}{2}$, then merge the two in $cn$ time.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item Let the time for merge sort $n$ numbers be $T(n)$, then merge
+ sort $\frac{n}{2}$ numbers takes $T(\frac{n}{2})$
+\end{itemize}
+$${\rm Total\ time\ can\ be\ written\ as: } T(n)=2\cdot T(\frac{n}{2})+cn$$
+ What is $T(n)$?
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+To Solve the Recursion
+\end{center}
+\begin{itemize}
+\item substitution method
+\item changing variable
+\item Recursion tree
+\item iteration method, to expand the recurrence
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Solve $T(n)=2T(\frac{n}{2}) +n^2$}
+
+$n^2$ $--->n^2$\\
+$(\frac{n}{2})^2$ $(\frac{n}{2})^2$ $--->\frac{1}{2}n^2$\\
+$(\frac{n}{4})^2$ $(\frac{n}{4})^2$ $(\frac{n}{4})^2$ $(\frac{n}{4})^2$ $--->
+  \frac{1}{4}n^2$ \\
+...........\\
+$\sum\frac{1}{2^i}n^2 = n^2\sum\frac{1}{2^i}$ \\
+$\sum\frac{1}{2^i}$ converge to a constant.
+\end{center}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Solve $T(n) = 3 T(\lfloor \frac{n}{4}\rfloor)+n$}
+\end{center}
+\begin{eqnarray*}
+T(n)& = &n+3T(\lfloor \frac{n}{4}\rfloor) \\
+    &=& n+3(\lfloor \frac{n}{4}\rfloor+3T(\lfloor \frac{n}{16}\rfloor)))\\
+    &=& n+3(\lfloor \frac{n}{4}\rfloor +3(\lfloor \frac{n}{16}\rfloor
+      + 3T(\lfloor \frac{n}{64}\rfloor)))\\
+    &=& n+3\lfloor \frac{n}{4}\rfloor + 9\lfloor \frac{n}{16} \rfloor+ 
+      27 T(\lfloor \frac{n}{64}\rfloor)
+\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{}
+\begin{eqnarray*}
+T(n) &\le& {(\frac{3}{4})}^0n + {(\frac{3}{4})}^1n + {(\frac{3}{4})}^2n+
+  {(\frac{3}{4})}^3n + \ldots + {(\frac{3}{4})}^{\log_4n}n\\
+   & &{(\frac{3}{4})}^{\log_4n}n=n^{\log_4{\frac{3}{4}}}n=n^{\log_4 3-1}n=n^{\log_4 3-1+1}\\
+   &\le& n\sum_{i=0}^\infty {(\frac{3}{4})}^i + \Theta(n^{\log_43}) \\
+   &   &       (3^{\log_4n}=n^{\log_43})\\
+   & = &4n+o(n) = O(n)
+\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+$o$-notation
+\end{center}
+$o(g(n))$ = \{$f(n)|$ for any positive constant $c>0$, $\exists$ a constant
+ $n_0>0$ s.t. $0\le f(n)<cg(n)$ $\forall n\ge n_0$\}
+\end{frame}
+
+\begin{frame}{}
+What if $$T(n)=T(n/3)+T(2n/3)+n {\rm \ \ (balance\ partition)\ \ } $$
+$$T(n)=4T(\lfloor \frac{n}{3} \rfloor)+n?$$
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large A simplified Master Theorem}
+\end{center}
+%\begin{itemize}
+%\end{itemize}
+$a$, $b$, and $c$ are non-negative constant that
+$T(1) = b$, and $T(n) = aT(\frac{n}{c})+bn$, $n>1$.\\
+What if $a=c$, $a>c$, or $a<c$?
+\end{frame}
+
+\begin{frame}{}
+Proof of the above theorem\\
+If $n$ is a power of $c$, then
+$$T(n)=bn\sum_{i=0}^{\log_c n}r^i,\ \ \ \ {\rm where\ \ } r=a/c.$$
+If $a<c$, $\sum_{i=0}^{\infty}r^i$ converges, $T(n)$ is $O(n)$. \\
+If $a=c$, each term in the sum is unity, there are $O(\log n)$ term. Thus $T(n)$ is $O(n\log n)$. \\
+If $a>c$, then $$bn\sum_{i=0}^{\log_c n} r^i=bn\frac{r^{1+\log_c n}-1}{r-1},$$ which
+ is $O(a^{\log_c n})=O(n^{\log_c a})$.  
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Changing Variable}
+\end{center}
+\begin{itemize}
+\item Solve $T(n)=2T(\lfloor \sqrt{n}\rfloor) +\lg n$
+\item Let $m=\lg n$.
+\item Then we have $T(2^m) = 2 T(2^{\frac{m}{2}})+m$
+\item $S(m)=2 S(\frac{m}{2})+m$
+\item $S(m)=m\lg m$ or $T(n)=T(2^m)=S(m)=m\lg m = \lg n\lg \lg n$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Divide and Conquer}
+\end{center}
+\begin{itemize}
+\item A technique to solve problem
+\item Solve a problem by dividing the problem into (two) smaller size subproblems,
+\item solve the small subproblems, 
+\item combine the solutions to the subproblems to get the solutions to the 
+  original problem.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Divide and Conquer- merge sort}\\
+{\large MergeSort $n$ numbers consists of the following 3 steps.}
+\end{center}
+\begin{itemize}
+\item DIVIDE: divide the problem into 2 sub-problems of the same size.
+\item CONQUER: merge sort the two subproblems
+\item COMBINE: merge the two sorted sequences
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Divide and Conquer- quick sort}
+\end{center}
+\begin{itemize}
+\item DIVIDE: array {\tt A[p..r]} is partitioned into nonempty
+      {\tt A[p..q]} and {\tt A[q+1..r]} s.t. {\tt A[p..q]} is less than 
+      or equal to each element of {\tt A[q+1..r]}.
+\item CONQUER: quick sort the two arrays.
+\item COMBINE: Since the subarrays are sorted in place, no further work
+ is needed to combine them.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+\end{center}
+{\tt QuickSort (A,p,r)}\\
+{\tt if (p<r) then \{ \\
+\ \ q = Partition (A,p,r);\\
+\ \ QuickSort (A,p,q); \\
+\ \ QuickSort (A,q+1,r)\\
+\}\\}
+{\tt A[q]} is {\bf pivot}, after {\tt Partition}, {\tt q} is in the final
+ position (rank of the pivot).  Pivot is generally the first one in the 
+array\\ 
+$_{\rm draw\ a\ picture}$\\
+Run time for {\tt Partition(A,p,r)} is $\Theta(n)$, $n=r-p+1$.
+\end{frame}
+
+
+\begin{frame}{}
+\begin{center}
+Quick Sort- Worst Case
+\end{center}
+%\begin{itemize}
+%\end{itemize} 
+\begin{eqnarray*}
+T(n) &=& T(n-1)+\Theta(n) \\
+&=& \sum^n_{k=1}\Theta(k) \\
+&=& \Theta (\sum^n_{k=1}k) \\
+&=& \Theta (n^2)
+\end{eqnarray*}
+$_{\rm draw\ a\ tree\ like\ structure}$
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Quick Sort-Best case
+\end{center}
+{\tt Partition} produces two subarrays of same length $\frac{n}{2}$
+\begin{eqnarray*}
+T(n) &=& 2T(\frac{n}{2}) + \Theta(n) \\
+&=&\Theta(n\log n)
+\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Quick Sort- Balance Partition
+\end{center}
+\begin{itemize}
+\item Suppose partition always produces 9-1 split \\
+\item $T(n) = T(\frac{9}{10})+T(\frac{1}{10})+n$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Quick Sort- Average case
+\end{center}
+\begin{itemize}
+\item average case, expected computing time.  
+\item need an assumption, all permutations of input numbers are equally likely
+\item or we say ranks of the pivot have equal probability
+\item Most of the time (80\%) more balance than 9-1, 20\% less balance than
+ 9-1.  An intuition that the average case will be $O(n\log n)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Quick Sort- Average Case Analysis
+\end{center}
+{ 
+\begin{eqnarray*}
+T(n) &=& \frac{1}{n}(T(1)+T(n-1)+\sum_{q=1}^{n-1}(T(q)+T(n-q)))+\Theta(n) \\
+&=&\frac{1}{n}\sum_{q=1}^{n-1}(T(q)+T(n-q))+\Theta(n) \\
+&=&\frac{2}{n}\sum_{k=1}^{n-1}T(k)+\Theta(n)
+\end{eqnarray*}
+}
+\end{frame}
+
+\begin{frame}{}
+The following, assume $T(n)\le an\lg n+b$ for some $a>0$, $b>0$, to be 
+ determined.  \\
+By substitution we can show $T(n)\le \frac{2a}{n}\sum_{k=1}^{n-1}k\lg k +
+ \frac{2b}{n}(n-1)+\Theta(n)$ \\
+Then to show 
+ $\sum_{k=1}^{n-1}k\lg k \le \frac{1}{2}n^2\lg n -\frac{1}{8}n^2.$\\
+Finally, using the bound to show $T(n)\le an\lg n +b$
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Randomized Quick Sort
+\end{center}
+\begin{itemize}
+\item What is the bad input? 
+\item A randomized quick sort, need a random number generator, randomly choose
+ a pivot.  (Choose a pivot, swap with the first one).  
+\item Question: What is the wost case time complexity for randomized 
+quick sort?
+\item Question: Is there bad input?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Some remarks regarding the Quick Sort
+\end{center}
+\begin{itemize}
+\item It is fast, performance is the best, since it moves only when necessary.
+\item Mix quick sort and insertion sort to obtain a faster algorithm: to sort
+ array {\tt A[p..q]}, if the length of {\tt A[p..q]} is less than a
+ given constant, then stop.  
+ Otherwise partition {\tt A[p..q]}.  Finally, insertion sort the whole 
+ array {\tt A}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Heap Sort}
+\end{center}
+\begin{itemize}
+\item In selection sort, can we make the selection of minimum (maximum) faster?
+\item Need a {\it priority queue}
+\item Priority queue is implemented using the data structure {\bf heap}.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Priority Queue
+\end{center}
+\begin{itemize}
+\item abstract data type, define the data type as well as its operations, 
+ detail implementations are ignored.  
+\item a priority queue, a data structure stores {\it key}, the operations are
+ ``insert arbitrary'' and ``delete the minimum (maximum)''lead.  
+\item Priority queue can be implemented by using unsorted array, 
+ sorted array, or a heap.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Priority Queue
+\end{center}
+\begin{itemize}
+\item What if implemented using a unsorted array?
+\item What if implemented using a sorted array?
+\item Implemented using a heap, delete minimum and inserted arbitrary are done
+ in $O(\log n)$ time. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Heap Structure
+\end{center}
+\begin{itemize}
+\item A heap is a {\it complete binary tree}
+\item The tree is stored in an array.  
+\item A max-heap, for any subtree, the root of the subtree is the maximum.  
+\item An example, 16, 14, 10, 8, 7, 9, 3, 2, 4, 1. $_{\rm draw\ the\ max-heap} $
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Heap Structure
+\end{center}
+\begin{itemize}
+\item In a tree, children of a node or parent of a node should be accessed
+ in constant time. 
+\item A node $i$ (the index of the array), it root is 
+ $\lfloor \frac{i}{2} \rfloor$.  
+ Its children are $2i$ and $2i+1$ if $2i\le n$ or $2i+1\le n$,
+ where $n$ is the number of nodes in the heap.  
+\item Height of the heap is $\Theta (\log n)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Maintain the heap property}
+\end{center}
+\begin{itemize}
+\item A function {\sc Heapify}
+\item Apply {\sc  Heapify} to a tree, $T$, only when $T$ meets the conditions, 
+ both left subtree and right subtree of $T$ are maximum heap; root of $T$ 
+ is not the maximum.  
+\item {\sc Heapify} moves the root down to the place it should go, and 
+ makes $T$ a max-heap again.  
+\item show an example
+\item What is the time complexity, $\Theta$ or $O$.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Heap Sort
+\end{center}
+\begin{itemize}
+\item Suppose that there is a max-heap of $n$ numbers, we are going to sort these
+ $n$ numbers.  
+\item Move the root (the maximum) to the end of the array
+ (move to the place it should go),
+ and move the last one, $p$, to the root.  $p$ may not be the maximum, we 
+ then need to modify (maintain) the heap- {\sc Heapify}.  
+ Note that the size of the
+ heap is reduced by one.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item After {\sc Hepaify}, we have a max-heap of $n-1$ nodes.  
+\item We then go to the first step and then iterate the steps until
+ there are no nodes.  
+\item What is the cost? $\Theta$ or $O$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Build the Heap
+\end{center}
+Input of the Heap Sort is an unsorted array.  The first step is to build the
+Max-heap. 
+\begin{itemize}
+\item { Given a heap of size $n$, how many are leaves? 
+ $\lceil\frac{n}{2}\rceil$}
+\item {\small These leaves are max-heap.}  
+\item {\small for $(\lceil \frac{n}{2}\rceil-1)$ down to 1 do {\sc Heapify}.  
+ {\small a quick example}}
+\item {\small Time complexity: each Hepaify takes $O(\log n)$ time, there are 
+ $\frac{n}{2}$ {\sc Heapifies}, so the total cost is $O(n \log n)$??}
+\item {\small accurate analysis leads to linear time upper bound.}  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Build a Heap
+\end{center}
+\begin{center}
+Time required to by {\sc Heapify} a sub-tree of height $h$ is $O(h)$\\
+leaves \ \ \ $\lceil \frac{n}{2}\rceil$ \\
+height 1\ \  $\lceil \frac{n}{2^2}\rceil$ \\
+height 2\ \  $\lceil \frac{n}{2^3}\rceil$ \\
+.... \\
+height $h$  $\lceil \frac{n}{2^{h+1}}\rceil$ \\
+\end{center}
+\end{frame}
+
+\begin{frame}{}
+So the total cost is 
+\begin{eqnarray*}
+\sum_{h=0}^{\lfloor \lg n\rfloor}ch\lceil \frac{n}{2^{h+1}}\rceil &\le&
+ cn(\sum_{h=0}^{\lfloor \lg n\rfloor}\frac{h}{2^h}) \\
+&\le& cn \sum_{h=0}^\infty (\frac{h}{2^h}) \\
+&\le & cn\cdot 2 \\
+&=& O(n)
+\end{eqnarray*}
+%Since $\sum^\infty_{k=0}kx^k=\frac{x}{1-x}$ for $|x|<1$ (Eq. A.8). We let $x=\frac{1}{2}$.
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Building the Heap
+
+To get $\sum_{h=0}^\infty(\frac{h}{2^h})$, \\
+Eq. ((A.8) or (3.6)) $\sum_{k=0}^\infty kx^k = \frac{x}{(1-x)^2}$ \\
+Substituting $x = \frac{1}{2}$ yields $\sum_{k=0}^\infty k\frac{1}{2^k}$
+\end{center}
+\begin{itemize}
+\item So building a max-heap actually takes $O(n)$ time.
+\item Question: Do you think accurate analysis of heap sort leads better
+ time complexity ($o(n\log n)$ time)??
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Can you beat $n\log n$ bound for Sorting Problem?
+\end{center}
+\begin{itemize}
+\item Linear decision tree model: a binary tree, internal nodes are 
+comparisons, leaves are solutions
+\item computation: proceed by comparing in the internal nodes,
+outcome decides the branching directions, when the computation reach
+a leave, a solution is obtained
+\item The number of operations = the path from root to the leaf (result).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item the number of leaves = the all possible results.  For sorting problem
+ (to decide a permutation that meets a certain property),
+ if the input size is $n$, there are $n!$ possible results.
+\item the least possible path length (in the worst case) is at least $\log n!$ which is greater than 
+ $n \log n$, ($n!\ge (\frac{n}{e})^n$), Stirling's approximation)
+\item $n\log n$ is the best possible result.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+$\Omega$-notation- Asymptotic Lower Bound
+\end{center}
+For a given $g(n)$, $\Omega(g(n))$ is the set of functions \\
+$\Omega(g(n))$ = \{ $f(n)|\exists $ positive constants $c$ and $n_0$, s.t.
+$0\le cg(n)\le f(n)$, $\forall n\ge n_0$ \} \\
+For any two functions $f(n)$ and $g(n)$, $f(n)=\Theta(g(n))$ if and only if
+$f(n)$ = $O(g(n))$ and $f(n)$ = $\Omega(g(n))$
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large The Master Theorem}
+Let $a\ge 1$ and $b\ge 1$ be constants, let $f(n)$ be a function, and let $T(n)$
+ be defined on the nonnegative integers by the recurence 
+$$T(n) = aT(n/b)+f(n).$$
+$T(n)$ can be bounded asymptotically as 
+\begin{enumerate}
+\item If $f(n)=O(n^{\log_ba-\epsilon})$ for some constant $\epsilon>0$, then $T(n)=\Theta(n^{\log_ba})$.
+\item If $f(n)=\Theta(n^{\log_ba})$, then $T(n)=\Theta(n^{\log_ba}\lg n)$.
+\item If $f(n)=\Omega(n^{\log_ba+\epsilon})$ for some constant $\epsilon>0$, and if 
+$af(n/b)\le cf(n)$ for some constant $c<1$ and all sufficiently large $n$, then $T(n)=\Theta(f(n)).$
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Sorting in Linear Time}
+\end{center}
+\begin{itemize}
+\item Assume that each of the $n$ input elements is an integer in the range
+ 1 to $k$.
+\item When $k=O(n)$, the sort runs in $O(n)$ time.  
+\item basic idea, for each input element $x$, how many are less than $x$- counting sort.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item input sequence is (3, 6, 4, 1, 3, 4, 1, 4), we consider the sequence as ($3^1$,
+$6^2$, $4^3$, $1^4$, $3^5$, $4^6$, $1^7$, $4^8$) where the superscript is the position
+of the key in the input sequence.
+\item {\it stable}: a sorting algorithm is stable if the order of two elements having identical
+ keys is preserved after applying the algorithm. 
+\item i.e., we get the result, ($1^4$, $1^7$, $3^1$, $3^5$, $4^3$, $4^6$, $4^8$, $6^2$). 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Counting Sort}
+\centerline{First Iteration, calculate the number of occurences of a key. }
+\centering {
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|} \hline
+Number of Occurences & 0 & 2 & 0 & 2 & 3 & 0 & 1 & 0 & 0 & 0 \\ \hline
+Key & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9\\ \hline
+\end{tabular}
+}
+\vskip 40pt
+\centerline{Second Iteration, Calculate the ``positions'' of the keys after sorting.}
+\centering {
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|} \hline
+Position & 0 & 2 & 2 & 4 & 7& 7 & 8 & 8 & 8 & 8 \\ \hline
+Key & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\ \hline 
+\end{tabular}
+}
+\end{frame}
+
+\begin{frame}{}
+\vskip 40pt
+Combine these two tables, we know, for examples, \\
+there are 2 1s (from first table), the last 1 will be at position 2 after sorted (from second table), or \\
+there are three 4s (from first table), the last 4 will be at position 7 after sorted (from second table). 
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Radix Sort
+\end{center}
+\begin{itemize}
+\item A $d$-digit number is considered $d$ keys.
+\item most significant digit first
+\item least significant digit first
+\item an example 329, 457, 657, 839, 436, 720, 355
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Discussion on the lower bound
+\end{center}
+\begin{itemize}
+\item Why radix sort beats the lower bound?
+\item the operation used is not ``comparison'', thus it is beyond the
+ the linear decision tree model.  
+\item powerful operator could reduce the time required
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Minimum Gap and Maximum Gap
+\end{center}
+\begin{itemize}
+\item Minimum Gap:
+  Given a set $A=\{a_1, a_2, ..., a_n\}$, determine $i$ and $j$ that
+ $|a_i-a_j|$ is minimum.
+\item Maximum Gap:
+  Given a set $A=\{a_1, a_2, ..., a_n\}$, determine $i$ and $j$ that
+  there is no $a_k$, $a_i<a_k<a_j$ and $|a_i-a_j|$ is maximized.  
+\item Both have $\Omega(n\log n)$ lower bound under linear decision tree model.
+\item Maximum can be solved in $O(n)$ time when floor function is allowed.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+Linear time algorithm for Max-Gap
+\end{center}
+\begin{itemize}
+\item Given $A=\{a_1,a_2,...,a_n\}$, find the maximum gap.
+\item normalize the numbers into the range $[0,1]$.
+\item Equally divide the range into $n+1$ intervals.
+\item put these $n$ number into the buckets
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item by pigeon hole principle, there must be at least an empty bucket
+\item The maximum gap cannot be determined by the element in the same bucket
+\item maximum gap can be determined by the largest in a bucket and the smallest
+ in the next non-empty bucket.
+\item a linear time algorithm
+\end{itemize}
+\end{frame}
+
+%\begin{slide}{}
+%\begin{center}
+%\end{center}
+%\begin{itemize}
+%\end{itemize}
+%\end{slide}
+\end{document}
+
+

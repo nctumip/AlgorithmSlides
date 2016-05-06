@@ -1,0 +1,360 @@
+
+\documentclass{beamer}
+\usepackage{amsmath,amssymb}
+\usepackage{epsfig}
+\begin{document}
+
+% include the main file
+\begin{frame}{}
+\begin{center}
+{\Large Greedy Algorithm}
+\end{center}
+\begin{center}
+Optimization Problem
+\end{center}
+\begin{enumerate}
+\item Dynamic programming: A sequence of choices, carefully make choice.  
+\item Greedy approach: Make choice that looks the best at the moment, and
+ it leads to optimal solution.  
+\end{enumerate}
+\end{frame}
+\begin{frame}{}
+\begin{center}
+{\large Activity-Selection problem}
+\end{center}
+\begin{itemize}
+\item Problem of scheduling a resource among several competing activities.
+\item Given a set $S$= $\{1,2,\ldots,n\}$ of $n$ proposed activities that wish
+ to use a resource.
+\item Each activitiy $i$ has a start time $s_i$ and a finish time $f_i$,
+ $s_i<f_i$ ($[s_i,f_i)$).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Activity-Selection problem}
+\end{center}
+\begin{itemize}  
+\item Activities $i$ and $j$ are {\it compactable} if interval $[s_i,f_i)$
+ and $[s_j,f_j)$ do not overlap.  (Or $i$ and $j$ are compactable if
+ $s_i\ge f_j$ or $s_j\ge f_i$).
+\item The activity-Selection problem is to select
+ a maximum-size set of mutually
+ compactable activities.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{ \large Try to solve the problem} \\
+{\large using the dynamic programming technique}
+\end{center}
+\begin{itemize}
+\item Define $S_{i,j}=\{ a_k\in S | f_i<s_k<f_k\le s_j\},$
+\item $S_{i,j}$ a subset of activities in $S$,
+\begin{itemize}
+\item start after activity $a_i$ finishes, 
+\item finish before activity $a_j$ starts.
+\end{itemize}
+\item $S_{i,j}$ consists of all activities that are compatible with $a_i$, $a_j$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}{\large To represent the entire problem}\end{center}
+\begin{itemize}
+\item Add activities $a_0$ and $a_{n+1}$, $f_0=0$, $s_{n+1}=\infty$
+\item Suppose that the activities are sorted in monotonically increasing order of finish time.
+$f_0\le f_1\le, \ldots, \le f_n\le f_{n+1}$,
+ then $S_{i,j}=\emptyset$ when $i\ge j$. 
+\item Thus we are looking for a maximum-size subset of mutually compatible activities from $S_{i,j}$,
+$0\le i < j \le n+1.$ (since all other $S_{i,j}$ are $\emptyset$)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large The substructure of the optimal solution}
+\end{center}
+\begin{small}
+\begin{itemize}
+\item For a non-empty subproblem $S_{i,j}$ 
+\item suppose a solution to $S_{i,j}$ includes $a_k$, $f_i\le s_k < f_k \le s_j$ 
+\item using $a_k$ generate 2 subproblems $S_{i,k}$ and $S_{k,j}$. 
+\item Solution to $S_{i,j}$ = solution to $S_{i,k}$ + solution to $S_{k,j}$ + 1 (for $a_k$). 
+\item Furthermore solutions to $S_{i,k}$ and $S_{k,j}$ must be optimal (otherwise cut and paste
+obtains a better solution.)
+\end{itemize}
+\end{small}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large A recursive solution} 
+\end{center}
+\begin{itemize}
+\item $c[i,j]$: the number of activities in the maximum-size subset of mutually compatible activities in $S_{i,j}$. 
+\item $c[i,j]=0$ whenever $S_{i,j}$ is $\emptyset$ (for $i\ge j$).  
+\item $c[i,j]=c[i,k]+c[k,j]+1$, if $S_{i,j}$ is not empty. 
+\item Since we don't know $k$, 
+ $c[i,j]=\max_{i<k<j} \{ c[i,k]+c[k,j]+1\}$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item Now build the table and the problem can be solved. 
+\item But the theorem simplifies the solution 
+\end{itemize}
+{\bf Theorem} Consider a nonempty subproblem $S_{i,j}$ with earliest finish time 
+$f_m = \min\{f_k|a_k\in S_{i,j}\}$. Then
+\begin{enumerate}
+\item Activity $a_m$ is used in some maximum-size subset of mutually compatible activities of $S_{i,j}$.
+\item The subproblem $S_{i,m}$ is empty, so that choosing $a_m$ leaves the subproblem $S_{m,j}$ as the only
+one that may not be empty. 
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{}
+\noindent{\bf Proof} Prove the first part. \\
+Suppose $A_{i,j}$ is a maximum-size subset of mutually
+ compactable activities of $S_{i,j}$.\\
+Now we order the activities in no-decreasing finish time order, and let $a_k$ be the first one. \\
+If $a_k=a_m$, we are done \\ 
+If $a_k\ne a_m$, we can construct $A'_{i,j}$ = $A_{i,j}-\{a_k\}\cup \{a_m\}$ because $f_m\le f_k$.
+Note that $A'_{i,j}$ has the same number of activities as $A_{i,j}$. \\
+We have an optimal solution that contains $a_m$, the first one has the earliest finish time. 
+\end{frame}
+
+\begin{frame}{}
+\noindent{}Prove the 2nd part. \\
+If $S_{i,m}$ is not empty, we can find $a_k$ s.t. $f_i\le s_k < f_k < s_m < f_m$.
+That means $a_k \in S_{i,j}$ and has an ealier finish time than $a_m$, contradict to our choice of $a_m$. \\
+
+Based on the theorem, now we know the $k$.
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Greedy Approach}
+\end{center}
+\begin{itemize}
+\item Assume that input activities are ordered by increasing finishing time
+ $f_1\le f_2 \le \ldots \le f_n$, if not, sort them in $O(n\log n)$ time.  
+\item iteratively select the next compactable one, i.e., (select the first one,
+ then look for the first compactable one and so on.)
+\item Easy, scheduling is done in $\Theta(n)$ time.  
+\item Is it optimal?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large To show greedy approach solve the optimal solution}
+\end{center}
+
+Theorem: Greedy approach produces solutions of maximum size of the
+ activity-selection problem.  \\ 
+Proof: We first show there is one optimal solution that
+ contains activity 1.  \\
+Let $S=\{1,2,\ldots ,n\}$ be the set of activities to schedule, $f_i$ are in
+ increasing order.  
+Suppose that $A\subseteq S$ is an optimal solution.  
+Suppose that 1 is not in $A$.
+$k$ is the activity that has the first finishing time.  Since $f_k\ge f_1$, 
+$B$ = $A-\{k\}\cup\{1\}$ is also an optimal solution.  
+\end{frame}
+
+\begin{frame}{}
+Once greedy approach choice of activity is made, the
+ problem reduces to finding an
+optimal solution of those activities in $S$ that are
+ compactable with activity 1. 
+That is if $A$ is an optimal solution to the original problem $S$, then 
+$A'$ = $A-\{1\}$ is an optimal solution to $S'$ = $\{i\in S:s_i>f_1\}$.  
+{\small (If we could find a solution $B'$ in $S'$ with more activities, than
+ $A'$, then adding activity 1 to $B'$ get a better solution than $A$, a
+ contradiction.)}  \\
+Thus after greedy choice is made, we have an optimization
+problem of the same form as the original problem.  \\
+By induction on the number
+of choices made, making the greedy choice at every step produces an optimal
+ solution.  
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large 0-1 Knapsack problem, fractional knapscak problem}
+\end{center}
+A thief robbing a store, finds $n$ items.  $i$th items worth $v_i$ dollars and
+ weight $w_i$ pounds.  He can carry at most $W$ pounds in his knapscak.  
+\begin{itemize}
+\item 0-1 (whole or nothing) knapscak can not be
+ solved using greedy approach.  
+\item fractional knapsack (can take a fraction), compute the ``value
+ per pound'' $\frac{v_i}{w_i}$, greedy approach calculates the optimal solution.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\Large Huffman Code}
+\end{center}
+\begin{itemize}
+\item For Data Compression, saving of 20\% to 90\%. 
+\item Use frequency of occurence to build up an optimal way to represent each
+ character in binary string.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item 6 characters, {\tt a}, {\tt b}, {\tt c}, {\tt d}, {\tt e}, {\tt f} 
+\item 3 bits are sufficient to present 6 characters.
+\end{itemize}
+%\begin{table}
+\begin{tabular}{|c||c|c|c|c|c|c||}\hline
+                & a  & b  & c  & d  & e & f \\ \hline
+Freq. (k)       & 45 & 13 & 12 & 16 & 9 & 5  \\\hline 
+Fixed length    &000 &001 & 010&011 & 100& 101 \\ \hline
+Variable length &0&101&100&111&1101&1100 \\ \hline
+\end{tabular}
+\begin{itemize}
+\item Fixed length, 3 bits for each char. $3\sum f_i$ = 300,000. 
+\item Variable length, $\sum l_i\cdot f_i$ = 224000.
+\end{itemize}
+%\end{table}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Prefix Code}
+\end{center}
+\begin{itemize}
+\item No codeword is a prefix of some other codewords.
+\item It can be shown that in optimal data compression, code is prefix code.  
+\item $0\cdot 101\cdot 101$ = 0101101.  If a code word is not prefix code,
+$01\cdot 010$ = 01010, ambigious.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\epsfxsize 3.0in{
+\centerline{\epsfbox{HuffmanTree.eps}}
+}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Huffman Tree}
+\end{center}
+\begin{itemize}
+\item leaves: chars.
+\item if there is a set of $C$ chars, there are $|C|$ leaves, $|C|-1$ 
+ internal nodes.  
+\item 0 branching to left and 1 branching to right.  
+\item to decode {\tt 00101111}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Huffman Tree}
+\end{center}
+\begin{itemize}
+\item An optimal code for a file: represented by a {\it full binary tree}
+ (every nonleaf node has two children).
+\item Given a tree $T$ corresponding to a prefix code, the number of bits
+ required to encode the file = the cost of the tree.  
+\item Cost of the tree: $B(T)=\sum_{c\in C}f(c)d_T(c)$, where $d_T(c)$ the
+ depth of the leaf representing $c$, $f(c)$ the frequency of occuring of $c$.
+\item It is optimal iff $B(T)$ is the least.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Constructing a Huffman Tree}
+\end{center}
+\begin{itemize}
+\item Invented by Huffman, a greedy approach
+\item Need a priority queue $Q$ that stores the frequencies,
+\item delete the two smallest from $Q$,
+\item merge them and insert the merged back to $Q$
+\item iterate until the $Q$ is empty. 
+\item {\small an example f:5, e:9, c:12, b:13, d:16, a:15}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Lemma, Greedy Choice Property}
+\end{center}
+Let $C$ be an alphabet in which each char $c\in C$ has frequency $f(c)$.
+Let $x$ and $y$ be the two chars in $C$ having the lowest frequencies.  
+Then there exist an optimal prefix code for $C$ in which the codewords for 
+ $x$ and $y$ have the same length, and differ only in the last bit. 
+ ($x$ and $y$ are sibling leaves)
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Proof of the Greedy Choice Property}
+\end{center}
+\begin{itemize}
+\item $T$ is an arbitrary optimal prefix code.  Let $b$ and $c$ be two chars that
+ are sibling leaves of maximum depth in $T$.  
+\item Assume without loss of generality that $f[b]\le f[c]$ and $f[x]\le f[y]$.  
+\item Since $f[x]$ and $f[y]$ are the smallest two, $f[x]\le f[b]$ and 
+ $f[y]\le f[c]$.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item In $T$, exchange $b$ and $x$ to produce $T'$, 
+\item then exchange $c$ and $y$ in $T'$
+to produce $T''$.  
+\end{itemize}
+Exchange $b$ and $x$, the difference between the costs of $T$ and $T'$,
+\begin{eqnarray*}
+B(T)-B(T') &=& \sum_{c\in C} f(c)d_T(c) - \sum_{c\in C}f(c)d_{T'}(c) \\
+ &=& f[x]d_T(x)+f[b]d_T(b)-f[x]d_{T'}(x) - f[b]d_{T'}(b) \\
+ &=& f[x]d_T(x)+f[b]d_T(b)-f[x]d_T(b)-f[b]d_T(x) \\
+ &=& (f[b]-f[x])(d_T(b)-d_T(x)) \\
+ &\ge & 0
+\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Lemma, Optimal substructure property}
+\end{center}
+Let $T$ be a full binary tree representing an optimal prefix code over
+ an alphabet $C$, where freq $f[c]$ is defined for each character $c\in C$. 
+Consider any two chars $x$ and $y$ that appear as sibling in $T$ and
+ let $z$ be their parent.  Then considering $z$ as a char with freq
+$f[z]=f[x]+f[y]$.  \\
+The tree $T'$ = $T$-$\{x,y \}$ representing an optimal prefix code
+ for the alphebat $C'$ = $C-\{x,y\}\cup\{z\}$.  
+\end{frame}
+
+\begin{frame}{}
+\begin{center}
+{\large Proof of the Optimal substructure property}
+\end{center}
+\begin{itemize}
+\item For each $c\in C-\{x,y\}$, $d_T(c)=d_{T'}(c)$, we have 
+$f[c]d_T(c)=f[c]d_{T'}(c)$. 
+\item Since $d_T(x)=d_T(y)=d_{T'}(z)+1$ we have
+$f[x]d_T(x) + f[y]d_T(y)$ = $(f[x]+f[y])(d_T[z]+1)$
+ = $f[z]d_{T'}[z]+(f[x]+f[y])$, or $B(T)$ = $B(T')+(f[x]+f[y])$.  
+\item If $T'$ represents a non-optimal prefix code in $C'$, there 
+exists $T''$ whose leaves are chars in $C'$ s.t. $B(T'')<B(T')$.  
+Note that $z$ is also a leaf in $T''$.  
+\item If we add $x$ and $y$ as children of $z$ in $T''$, then obtain a prefix code
+for $C$ with cost $B(T'')+f[x]+f[y] < B(T)$, a contradiction.  
+\end{itemize}
+\end{frame}
+\end{document}

@@ -1,0 +1,26 @@
+\documentclass[12pt]{article}
+\textheight 9.0in
+\topmargin -0.5in
+\textwidth 6.6in
+\oddsidemargin -0.3in
+\begin{document}
+\centerline{\bf Design and Analysis of Algorithm}
+\centerline{\bf Mid-Term Exam.}
+\centerline{Apr. 8, 2016}
+\begin{enumerate}
+\item ({\it{10\%}}) Show that building a max-heap takes linear time.  So you have to present the algorithm, then show your algorithm takes linear time. 
+
+\item ({\it{10\%}}) Solve the recursion $T(n)=2T(\sqrt{n}) + \lg n.$
+
+\item ({\it{10\%}}) Show that LSD Radix sort sorts $n$ integer of $k$ digirs in linear time where $k$ is a constant. So you need to present the linear time algorithm, then show the algorithm  takes $O(n)$ time. 
+
+\item ({\it{15\%}}) Your programming assignment is to find the shortest distance among a set of $n$ 2D points. Now, please describe the divide an conquer algorithm for finding the shortest distance among a set of $n$ points on a line. I need the divide and conquer algorithm. Sorting is not allow. 
+
+\item ({\it{20\%}}) Given $n=2^k-1$ keys (for example distinct integers), there is a full binary search tree (all levels in the tree have maximum number of nodes) of height $k$ for these $n$ keys. Design two $O(n\log n)$ time algorithms to build this binary search tree. 
+
+\item ({\it{20\%}}) The hiring problem: the cost for an interviewing $c_i$, usually a small cost; the cost for hiring $c_h
+$, usually a much more expensive one; total cost is thus $O(c_i\cdot n+ c_h\cdot m)$ where $m$ is the number of times we hire a new one to replace the previous one. What is the best case for $m$? What is the worst case for $m$? Show that $m$ is $O(\in n)$ in the average. You may need the equation $$\sum_{i=1}^n \frac{1}{i} = \ln n.$$
+
+\item ({\it{20\%}}) Two computational problem $A$ and $B$, suppose we know the lower bound is $\Omega(n^2)$ to problem $A$; but the best known algorithm to solve $A$ is $O(n^3)$.  If we can construct a linear time reduction to reduce $A$ to $B$ (that means we transform the input to $A$ to the input to $B$ in linear time, solve $B$, the convert the solution to $B$ to the solution to $A$), what can you say about the computational problem $B$? Why?If we can construct a linear time reduction to reduce $B$ to $A$, what can you say about the problem $B$?  Why? (This is a question about lower bound and upper bound. )
+\end{enumerate}
+\end{document}

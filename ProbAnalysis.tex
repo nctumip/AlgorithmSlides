@@ -1,0 +1,193 @@
+\documentclass{beamer}
+%\usepackage{amsmath,amssymb}
+\usepackage{epsfig}
+
+\begin{document}
+\begin{frame}{}
+
+\vspace{1in}
+\centerline{\Large Probabilistic Analysis}
+\vspace{0.5cm}
+\centerline{Yu-Tai Ching}
+\centerline{Department of Computer Science}
+\centerline{National Chiao Tung University} 
+\end{frame}
+
+\begin{frame}{Hiring Problem}
+
+\begin{itemize}
+\item Hire new office assistant through employment agency.
+\item Agency provides one candidate a day, interview, decide either to hire or not. 
+\item Cost
+\begin{itemize}
+\item Pay the agency a small fee to interview an applicant,
+\item To actually hire an applicant is more costly, fire the current office assistant, pay substantial hiring fee to the agency.
+\end{itemize}
+\item Committed to have the best possible at all time, i.e., a new one is better than current one, then hire the new one.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item What the price will be? 
+\item Assume that candidates number 1 through $n$. 
+\item Interview has low cost $c_i$, hiring has higher cost $c_h$.
+\item If $m$ people hired, total cost $O(c_i\cdot n+c_h\cdot m)$. $c_i\cdot n$ is fixed, we analyze $c_h\cdot m$. 
+\item Worst case, hire everyone interviewed, candidates come in strictly increasing order of quality. $O(c_h\cdot n)$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Probabilistic Analysis}
+
+\begin{itemize}
+\item Must use knowledge of the distribution of the input, averaging total cost over all possible input, average case analysis. 
+\item For the hiring problem, assume that the applicatns come in a random order. 
+\item Meaning \begin{itemize}
+\item Assume there is a total order for the qualification, 
+\item i.e., candidate can be numbered $1, 2, \ldots, n$ and $rank(i)$ the rank of application $i$,
+\item $<rank(1),rank(2), \ldots, rank(n)>$ a permutation of $<1,2,\ldots,n>$. 
+\item Applicants come in random order is equivalent to saying that this list of ranks is equally likely to be any one of $n!$ permutation of $1,2,\ldots,n$, 
+\item or the ranks from a uniform random permutation.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Indicator Random Variable}
+
+\begin{itemize}
+\item A convenient method for converting between probabilities and expectation. 
+\item Given a sample space $S$ and an event $A$, indicator random variable $I\{A\}$ associated with event $A$ defined as 
+\[
+I\{A\} = \left \{ 
+\begin{array}{ll} 
+1 & \mbox {if $A$ occurs,} \\ 
+0 & \mbox {if  $A$ does not occurs.}  
+\end{array}
+\right.
+\]
+\item Expected number of heads obtained when flipping a fair coin
+\begin{itemize}
+\item sample space $\{H,T\}$, $Pr\{H\}=Pr\{T\}=1/2$,
+\item define an indicator random variable $X_H$ Associated with the coin coming up head (event $H$),
+\[
+X_H=I\{H\}=
+\left \{ 
+\begin{array}{ll} 
+1 & \mbox {if $H$ occurs,} \\ 
+0 & \mbox {if  $H$ does not occurs.}  
+\end{array}
+\right.
+\]
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item Expected number of heads obtained in one flip = the expected value of the indicator variable $X_H$,
+\begin{align*}
+E[X_H] &= E[I\{H\}] \\
+ &= 1\cdot Pr\{H\} + 0\cdot Pr\{T\} \\
+ &= \frac{1}{2}.
+\end{align*}
+\item Expected value of an indicator random variable assocoated with an event $A$ = the probability that $A$ occurs. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma 5.1} Given a sample space $S$ and an event $A$ in the sample space $S$, let $X_A=I\{A\}$. Then $E[X_A] = Pr\{A\}$\\
+\ \\
+{\bf Proof} By the definition of the indicator random variable 
+\[
+I\{A\} = \left \{ 
+\begin{array}{ll} 
+1 & \mbox {if $A$ occurs,} \\ 
+0 & \mbox {if  $A$ does not occurs.}  
+\end{array}
+\right.
+\]
+and the definition of the expected value, we have 
+\begin{align*}
+E[X_A] &= E[\{I\{A\}] \\
+ &= 1.Pr\{A\}+0\cdot Pr\{\overline{A}\} \\
+ &= Pr\{A\}. 
+\end{align*}
+where $\overline{A}$ denotes $S-A$, the complement of $A$. 
+\end{frame}
+
+\begin{frame}{}
+\begin{itemize}
+\item Indicator random variable useful for analyzing situations in which we perform repeated random trial. 
+\item Let $X_i$ be the indicator random variable associated with the event in which $i$th flip comes up head,
+\item $X_i = I\{ \mbox{the $i$th flip results in the event $H$  } \}.$
+\item Let $X$ be the random variable denoting the total number of heads in the $n$ coin flips, $$X=\sum_{i=1}^{n}X_i.$$ 
+\item Expected number of heads $$E[X] = E\left [\sum_{i=1}^{n}X_i\right ]$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+By the linearity of expectation, 
+\begin{align*}
+E[X] &= E\left [\sum_{i=1}^n X_i\right ] \\
+ &= \sum_{i=1}^n E\left [X_i\right ] \\
+ &= \sum_{i=1}^n\frac{1}{2} \\
+ &=\frac{n}{2}.
+\end{align*}
+\end{frame}
+
+\begin{frame}{Now the Hiring Problem}
+\begin{itemize}
+\item Average cost = the expected number of times that we hire a new assistant. 
+\item Assume that the candidates arrive in random order, 
+\item Let $X$ be the random variable whose value equals the number of times we hire a new assistant, then $$E[X] = \sum_{x=1}^n x\cdot Pr\{X=x\}.$$
+\item Difficult to compute $E[X]$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Use Indocator Random Variable}
+\begin{itemize}
+\item Define $n$ variables related to whether or not each particular candidate is hired. 
+\item Let $X_i$ be the indicator random variable associated with event in which the $i$th candidate is hired. 
+\begin{eqnarray*}
+X_i &=& I\{\mbox{candidate $i$ is hired}\} \\
+ &=& 
+ \left \{ 
+ \begin{array}{ll} 
+1 & \mbox {if candidate $i$ is hired,} \\ 
+0 & \mbox {if  candidate $i$ is not hired.}  
+\end{array}
+\right.
+\end{eqnarray*}
+\item and $X=X_1+X_2+\ldots+X_n.$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item By Lemma 5.1, $E[X_i] = Pr\{ \mbox{Candidate $i$ is hired.} \}$
+\item What is the probability of candidate $i$ is hired? 
+\item $i$ is hired iff $i$ is better that each of candidates 1 through $i-1$. 
+\item Since candidates come arrive in random order, first $i$ candidates have appear in random order,
+\item and  any one of the first $i$ candidates is equally likely to be the best-qualify so far,
+\item candidate $i$ has a probability of 1/$i$ of being better quality that candidates 1 through $i-1$. 
+\item and thus a probability of $1/i$ of being hired. $$E[X_i] = \frac{1}{i}.$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{align*}
+E[X] &= E\left [\sum_{i=1}^nX_i\right ] \\
+ &=\sum_{i=1}^nE\left [X_i\right ] \\
+ &=\sum_{i=1}^n\frac{1}{i} \\
+ &= \ln n +O(1)
+\end{align*}
+Thus the average cost for hiring office assistant is $O(c_h\cdot \ln n)$
+\end{frame}
+
+\end{document}

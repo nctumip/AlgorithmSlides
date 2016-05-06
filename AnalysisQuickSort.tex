@@ -1,0 +1,137 @@
+\documentclass{beamer}
+%\usepackage{amsmath,amssymb}
+\usepackage{epsfig}
+\usepackage{pdfpages}
+
+\begin{document}
+\begin{frame}{}
+
+\vspace{1in}
+\centerline{\Large Analysis of Quick Sort}
+\vspace{0.5cm}
+\centerline{Yu-Tai Ching}
+\centerline{Department of Computer Science}
+\centerline{National Chiao Tung University} 
+\end{frame}
+
+\begin{frame}{Quicksort Pseudo Code}
+
+\begin{tabbing}
+WW\=WW\=WW\=WW\= \kill \\
+{\sc Quicksort} ($A$,$p$,$r$) \\
+1. \> if $p<r$ \\
+2. \> \> $q$ = {\sc Partition} ($A$,$p$,$r$) \\
+3. \> \> {\sc Quicksort} ($A$,$p$,$r$) \\
+4. \>\> {\sc Quicksort} ($A$,$q+1$,$r$) \\
+\ \\
+{\sc Partition}($A$,$p$,$r$) \\
+1. \> $x=A[r]$ \\
+2. \> $i=p-1$ \\
+3. \> for $j=p$ to $r-1$ \\
+4. \> \> if $A[j] \le x$; \\
+5. \>\>\> $i=i+1$; \\
+6.\>\>\> exchange $A[i]$ with $A[j]$; \\
+7. \> exchange $A[i+1]$ with $A[r]$ \\
+8. return $i+1$
+\end{tabbing}
+\end{frame}
+
+\begin{frame}{Randomized Quick Sort}
+
+\begin{tabbing}
+WW\=WW\=WW\=WW\=WW\= \kill \\
+{\sc Rabdomized-Partition} ($A$,$p$,$r$) \\
+1. \> $i$ = {\sc Random} ($p$,$r$) \\
+2. \> exchange $A[r]$ with $A[i]$ \\
+3. \> return {\sc Partition} ($A$,$p$,$r$) \\
+\ \\
+{\sc Randomized-Quicksort} ($A$,$p$,$r$) \\
+1. \> if $p<r$ \\
+2. \>\> $q$ = {\sc Randomized-Partition} ($A$,$p$,$r$) \\
+3. \>\> {\sc Randomized-Quicksort} ($A$,$p$,$r$) \\
+4. \>\> {\sc Randomized-Quicksort} ($A$,$q+1$,$r$)
+\end{tabbing}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item Run time for {\sc Quicksort} = time spent in the {\sc Partition}
+\begin{itemize}
+\item {\sc Partition}, select a pivot, compare pivot with all of the others. 
+\item pivot is never included in any future recursive call. 
+\end{itemize}
+\item Thus at most $n$ calls to {\sc Partition}, 
+\item each {\sc Partition} takes a constant time plus the time required for the for loop (lines 3-6),
+\item we count the number of times line 4 executed, comparing an element with pivot. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Lemma 7.1}
+
+{\bf Lemma 7.1} Let $X$ be the number of comparisons performed in line 4 of {\sc Partition} over the entired execution of {\sc Quicksort} on an $n$-element array. Then the running time of {\sc Quicksort} is $O(n+X)$. \\ \ \\
+{\bf Proof} There are at most $n$ calls of {\sc Partition}, each call take constant time and time for line 4. Total time for line 4 is $X$. \ \\ \ \\
+Our goal is to compute $X$. 
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item Rename the elements of the array $A$ as $z_1, z_2, \ldots, z_n$. 
+\item Define $Z_{ij} = \{ z_i,\ldots, z_j\}$ the set of element between $z_i$ and $z_j$. 
+\item When does the algorithm compares $z_i$ and $z_j$?
+\item Define an indicator random variable $$X_{ij} = I \{ z_i \mbox{ is compared to } z_j\}.$$.
+\item Since each pair is compared at most once, total number of comparisons performed by the algorithm is $$X=\sum_{i=1}^{n-1}\sum_{j=i+1}^nX_{ij}.$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+Taking expectation of both sides,a and then using linearity of expectation
+\begin{align*}
+E[X] &= E \left[  \sum_{i=1}^{n-1}\sum_{j=i+1}^nX_{ij} \right]\\
+ &= \sum_{i=1}^{n-1}\sum_{j=i+1}^nE[X_{ij}] \\
+ &= \sum_{i=1}^{n-1}\sum_{j=i+1}^n Pr \{ z_i \mbox{ is compared with } z_j \}
+\end{align*}
+
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item We assumed that each pivot selected randomly. 
+\item Observe that 
+\begin{itemize}
+\item Once a pivot $x$ is choosen, $z_i<x<z_j$, $z_i$ and $z_j$ cannot be compared any more. 
+\item if $x==z_i$, $z_i$ is compared with all of the others. 
+\item if $x==z_j$, $z_j$ is compared with all of the others.  
+\end{itemize}
+\item Thus $z_i$ and $z_j$ are compared iff $z_i$ or $z_j$ are selected as pivot. 
+\item Probability $z_i$ ($z_j$) is selected as pivot  $$\frac{1}{j-i+1}$$ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+ We conclude
+\begin{align*}
+Pr\{ z_i &\mbox{ is compared with }z_j\} \\
+ &= Pr\{z_i \mbox{ or } z_j \mbox{ is selected as pivot from } Z_{ij}\} \\
+ &= Pr\{z_i \mbox{ is pivot from }Z_{ij} \} + Pr \{ z_j \mbox{ is pivot from } Z_{ij}\} \\
+ &= \frac{1}{j-i+1} +\frac{1}{j-i+1} \\
+ &= \frac{2}{j-i+1} 
+\end{align*}
+\end{frame}
+
+\begin{frame}{}
+
+We get 
+\begin{align*}
+E[X] &= \sum_{i=1}^{n-1}\sum_{j=i+1}^n\frac{2}{j-i+1} \\
+  &= \sum_{i=1}^{n-1}\sum_{k=1}^{n-i}\frac{2}{k+1} \ \ (\mbox{ let } k=j-i) \\
+  &< \sum_{i=1}^{n-1}\sum_{k=1}^n\frac{2}{k} \\
+  &= \sum_{i=1}^{n-1}O(\lg n) \ \ (\mbox{ by equation A. 7}) \\
+  &= O(n\log n)
+\end{align*}
+\end{frame}
+\end{document}

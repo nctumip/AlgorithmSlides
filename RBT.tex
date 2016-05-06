@@ -1,0 +1,173 @@
+\documentclass{beamer}
+%\usepackage{amsmath,amssymb}
+%\usepackage{epsfig}
+\usepackage{pdfpages}
+\begin{document}
+\begin{frame}{}
+
+\vspace{1in}
+\centerline{\Large Red Black Tree}
+\vspace{0.5cm}
+\centerline{Yu-Tai Ching}
+\centerline{Department of Computer Science}
+\centerline{National Chiao Tung University} 
+\end{frame}
+
+\begin{frame}{Red Black}
+
+\begin{itemize}
+\item Each node is colored, either red or black. 
+\item A kind of height balance tree. 
+\item Inplementation, each node contains the attributes, {\it color}, {\it key}, {\it left}, {\it right}, and {\it p}. 
+\item If a node does not have {\it p}, {\it left}, or {\it right}, they point to {\sc Nil}
+\item All {\sc Nil}s are replaced by a black node {\sc T.Nil}. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Red Black Tree Definition}
+\begin{enumerate}
+\item Every node is either red or black. 
+\item The root is black. 
+\item Every leaf is black {\sc Nil}.
+\item If a node is red, then both its children are black. 
+\item For each node, all simple paths from the node to decendant leaves contains the same number of vlack nodes.  
+\end{enumerate}
+\begin{itemize}
+\item Figure 13.1.
+\item The black height of node $x$, $bh(x)$: number of black nodes on simple paths from node $x$ (not including $x$) down to a leaf. 
+\item Black height of a RB Tree, the black height of the root. 
+\item Together with property 4, height of RB Tree is at most 2*$bh(root)$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma 13.1 } RB Tree with $n$ internal nodes has height at most $2\cdot \lg(n+1)$.
+\begin{itemize}
+\item Immediate consequence, {\sc Search}, {\sc Minimum}, {\sc Maximum}, {\sc Successor}, {\sc Predecessor} can be done in $O(\lg n)$ time,. 
+\item How about {\sc Insertion} and {\sc Deletion}? Need to change color of some nodes and rotation. 
+\item figures of rotations, left and right rotation. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{BST Quick Review}
+
+\begin{itemize}
+\item Insertion, 
+\item Deletion, $z$ is to be deleted, 
+\begin{itemize}
+\item $z$ has one child or less, delete it. 
+\item $z$ has two children, move the {\sc Successor($z$)} to $z$'s place, delete {\sc Successor($z$)}. 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{RB Insertion}
+
+\begin{itemize}
+\item Insert a node $s$ as insertion $z$ into a binary search tree. 
+\item $z$ is inserted as a red node. 
+\item If $z.p$ is black, we are done. 
+\item If $z.p$ is red, we have consecutive red nodes. 
+\item Two cases. Either $z$ is left child or right child of $z.p$, cases depends on the color of $z$'s uncle, $y$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Case 1, $y$ is red}
+
+\begin{itemize}
+\item $z.p.p$ is black (why?). 
+\item swap color of the two levels, $z.p.p$  was black, now it becomes red,
+\item $z.p$ and its sibling $y$ were red, now they are black. 
+\item Check RB Tree properties. 
+\item $z.p.p$ is the new $z$, violation if $z.p$ is red. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Case 2, $y$ is black}
+
+\begin{enumerate}
+\item 2-1 $z$ is right child of $z.p$,
+\begin{itemize}
+\item left rotate about A (Figure 13.6) to get case 2-2
+\end{itemize}
+\item 2-2 $z$ is left child of $z.p$. 
+\begin{itemize}
+\item color changes and right rotate about C (Figure 13.6), we are done. 
+\item check red-black property, and why we are done?
+\end{itemize}
+
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{RB Tree Delete}
+
+\begin{itemize}
+\item $z$ is deleted, 
+\item $z$ has one child or less, its child $x$ moves to $z$'s place ({\it left} or {\it right} of $z.p$ points to $z$'s child). 
+\item We push the color of $z$ to $x$. 
+\item If $z$ was red, $x$ must be black, we are done. Red is removed, $x$ now is black. 
+\item  If both $z$ and $x$ were black, we have a double black $x$. 
+\item $z$ has two children, $z$'s successor $w$ is moved to $z$'s place, and take $z$'s color.  $w$ is deleted, we have previous case. 
+\item We have to take care the case that $x$ is double black. 
+\item A simple case, if $x$ is the root, we simply remove the extra black. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{$x$ is doubly black, $x$ is not root}
+
+\begin{itemize}
+\item Assume that $x$ is left child of $x.p$, the other case is symmetric. 
+\item Two cases depend on the color of $w$, the sibling of $x$
+\item $w$ is red, we have case 1. If $w$ is black, we have some more sub-cases. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Case 1, $w$ is red, Figure 13.7 (a)}
+
+\begin{itemize}
+\item $x.p$ must be black, 
+\item children of $w$ must be black. 
+\item change color of B and D, and left rotate about B,
+\item $x$'s sibling is now $C$, $C$ is black, we have case 2.  
+\end{itemize}
+\end{frame}
+
+%\begin{frame}
+%\includepdf[pages={1}]{Figure137a.pdf}
+%\begin{figure} \centering {
+%\includegraphics{Figure137a.pdf}
+%}
+%\end{frame}
+
+\begin{frame}{Case 2, $w$ is black, both $w$'s children are black, Figure 13.7 (b)}
+
+\begin{itemize}
+\item $x.p$ can be red or black,  children of $w$ are black as defined. 
+\item push one black from $x$ and one black from $w$ to $x.p$, $x$ becomes single black, $w$ becomes red,
+\item color of $x.p$ depends on the original color, 
+\begin{itemize}
+\item $x.p$ was red, then $x.p$ becomes black. 
+\item $x.p$ was black, the $x.p$ becomes double black, it is now the new $x$. 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Case 3, $w$ is black, one of $w$'s children is black and the other is red}
+Sub-case 3.1, left child is red. {\color{blue} Figure 13.7 (c)} 
+\begin{itemize}
+\item Right rotate about $D$, and change color,
+\item now $C$ is new $w$, right child is red, we have sub-case 3.2,
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+Sub-case 3.2, right child is red. {\color{blue} Figure 13.7 (d)}
+\begin{itemize}
+\item Color changes (refer to procedure {\sc RB-DEKETE-FIXUP},
+\item  left rotate about $B$, 
+\end{itemize} 
+\end{frame}
+
+\end{document}

@@ -1,0 +1,978 @@
+\documentclass{beamer}
+\usepackage{amsmath,amssymb}
+\usepackage{epsfig}
+\begin{document}
+
+\begin{frame}{}
+There are 7 cities, $b$, $c$, $d$, $e$, $f$, $g$, and $h$. \\
+If there is a path connecting two cities, the pair of cities forms a pair. \\
+$(b,e)$, $(h,c)$, $(f,d)$, $(c,e)$, $(g,f)$, $(e,h)$, and $(g,d)$ \\
+Is there a path connecting any pair of cities? 
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\Large Union-Find Operation}
+\begin{itemize}
+\item Group $n$ elements into a collection of disjoint sets. 
+\item Two operations
+\begin{itemize}
+\item {\small Find which set a given element belongs to,}
+\item {\small Union two sets.}
+\end{itemize}
+\item Find connected components, ({\small relation,
+ reflexsive, symmetric, transtive}).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{Disjoint-Set data structure}
+\begin{itemize}
+\item Maintain a collection $S=\{S_1,S_2,\ldots,S_k\}$ of disjoint dynamic
+ sets.
+\item Each Set is identified by representative- a member in the set.  
+\end{itemize}
+%\end{frame}
+
+%\begin{frame}{}
+\centerline{Operations}
+\begin{itemize}
+\item Make-Set($x$), create a new set, $x$ is the only member, $x$ is the
+ representative.  
+\item Union($x,y$), Unite the dynamic sets that contains $x$ and $y$ ($S_x$,
+$S_y$). Representative of the union of $x$ and $y$ is some member of 
+ $S_x\cup S_y$, $S_x$ and $S_y$ are destroied (removed from $S$). 
+\item Find-Set($x$), return a pointer to the representative of the set
+ containing $x$.   
+\end{itemize}
+\end{frame}
+
+%\begin{slide}{}
+%\centerline{Finding the Connected Components}
+%\begin{itemize}
+%\item Start with makeing set for each one, using Make-Set().
+%\item If $i$ and $j$ are connected (related), Find-Set($i$) and Find-Set($j$),
+%\item If they are in the same set, done,
+%\item Otherwise, Union these two sets to be one set. Because $i$ and $j$
+% make them connected. 
+%\end{itemize}
+%\end{slide}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item An application, determine the connected components of an 
+ undirected graph.
+\item Given $G=(V,E)$, 
+\item for each $v\in V[G]$, do Make-Set($v$);
+\item for each edge $(u,v)\in E[G]$, if Find-Set($u$) $\ne$ Find-Set($v$),
+ then Union($u,v$).
+\end{itemize}
+%\end{frame}
+\vspace{1cm}
+%\begin{frame}{}
+This is a problem, $n$ Make-Set operations, a sequence of $m$ Find-Set operations, 
+ and there are at most $n-1$ Union operations.  \\
+What is the data structure and what are the time complexcities for the
+ operations.  
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Linked-List representation}
+\begin{itemize}
+\item Head of the list is the representative.  
+\item Every one has a pointer pointing to the representative. 
+\item Make-Set, $\Theta(1)$ time. 
+\item Find, $\Theta(1)$.
+\item Union is little bit hard.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\epsfxsize 3.5in{
+\centerline{\epsfbox{uf-ls.eps}}
+}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Union in Linked-List Representation}
+\begin{itemize}
+\item Append one to the end of the other.
+\item Change pointers to the head of the merged list.
+\item There is a sequence of Unions that cost $\Theta(n^2)$ time if 
+ there are $n-1$ union.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large A Weighted-Union Heuristic}
+Append the smaller list onto the longer, tie broken arbitrary. \\
+{\bf Theorem:} Using the linked-list representation of disjoint sets and the
+ weighted-union heuristic, a sequence of $m$ Make-Set, Union, and 
+Find-Set operations, $n$ of Make-Set operations, takes $O(m+n\lg n)$ time.
+\end{frame}
+
+\begin{frame}{}
+
+Proof: 
+Count the number of times that an object's representative
+ pointer was modified.  \\
+Consider an object $x$, first time its pointer was modified, the resulting
+ set has at least 2 members.  \\
+2nd time update, resulting set has at least 4 members.  \\
+Updating $\lceil \lg k\rceil$ times, the resulting set has $k$ members.  \\
+There are at most $\lceil \lg n\rceil$ updates for an object.  There are
+$n$ objects, so Union costs at most $O(n\log n)$ time.  \\
+For Make-Set and Find-Set, each one takes $O(1)$ and there are $m$
+such operations.  Total cost is $O(m+n\lg n)$.
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\Large Disjoint-set forest}
+\begin{itemize}
+\item Each member points only to its parent.
+\item A connected component is a rooted tree.  
+\item Parent pointer of the root points to itself.  
+\item Root is the representative.  
+\item Union, change Parent of the root of one set, Find-Set, chacing the
+ Parent link.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\epsfxsize 3.5in{
+\centerline{\epsfbox{uf-forest.eps}}
+}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Time Complexity}
+\begin{itemize}
+\item Make-Set, each one takes $O(1)$ time. 
+\item Union, each one takes $O(1)$ time.  
+\item Find-Set, time required depending on the distance from the object
+ to the root.  
+\item There exists a sequence of $n$ Union/Find-Set operatine
+ that takes $O(n^2)$ time.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Heuristics to improve the running time}
+\begin{itemize}
+\item {\bf Union by rank}: Similar to the weighted-union heuristic, make the
+ root of the tree with fewer nodes point to the root of the tree with more
+ nodes. To ease the analysis, we maintain a {\bf rank} that is an
+ upper bound on the height of the node.  Union by rank, the root with small
+ rank is made to point to the root with larger rank during a {\sc Union}
+ operation. 
+\item {\bf Path Compression}: During the Find-Set operations, make each node
+ on the find path point directly to the root.   
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Pseudocode for disjoint-set forest}
+{\sc Make-Set($x$)} \\
+p[$x$] $\leftarrow x$ \\
+$rank[x]$ $\leftarrow$ 0\\
+
+\begin{tabbing}
+WW\=WW\= \kill \\
+{\sc Union $(x,y)$} \\
+{\sc Link(Find-Set($x$),Find-Set($y$))} \\ 
+\end{tabbing}
+
+\begin{tabbing}
+WW\=WW\= \kill \\
+{\sc Find-Set($x$)} \\
+{\bf if} $x\ne p[x]$ \\
+\> {\bf then} $p[x]$ $\leftarrow$ {\sc Find-Set($p[x]$)}\\
+{\bf return} $p[x]$
+\end{tabbing}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{tabbing}
+WW\=WW\=WW\=WW\=\kill \\
+Link$(x,y)$ \\
+{\bf if} $rank[x]>rank[y]$ \\
+\>{\bf then} $p[y]\leftarrow x$ \\
+\>{\bf else} $p[x]\leftarrow y$ \\
+\>\>{\bf if} $rank[x]=rank[y]$ \\
+\>\>\>{\bf then} $rank[y]\leftarrow rank[y]+1$\\
+\end{tabbing}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Effect of the Heuristics on running time}
+\begin{itemize}
+\item If there are $f$ {\sc Find-Set} operations, the path-compression
+ heuristic alone gives a worst case running time
+$\Theta(f\log_{(1+f/n)}n)$ if $f\ge n$ and $\Theta(n+f\lg n)$ if $f<n$.
+\item If both union by rank and path compression are applied, the wrost
+case running time is $O(m\alpha(n))$ where $\alpha(n)$ is a {\it very}
+ slowly growing function.
+\item In any conceivable application of a disjoint-set data structure,
+ $\alpha(n)\le 4$, we can view the running time as linear in $m$ in all
+ practical situation. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Functional Iteration}
+{\small Section 3.2} \\
+Notation $f^{(i)}(n):$ function $f(n)$ iteratively applied $i$
+times to an intitial value on $n$. \\
+Let $f(n)$ be a function over reals, for nonnegative integer $i$,
+\begin{equation}
+f^{(i)}(n) =\left \{
+\begin{array}{ll}
+n & {\rm \ if\ } i=0 \\
+f(f^{(i-1)}(n)) & {\rm \ if\ }i>0
+\end{array}
+\right.
+\end{equation}
+If $f(n)=2n$, then $f^{(i)}(n)=2^in$. \\
+For example $f^{(2)}(n)$ = $f(f^{(1)}(n))$ = $f(f(f^{(0)}(n)))$ = $f(f(n))$ = $f(2n)$ 
+ = $2^2n$. 
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Iterated logrithm function}
+\begin{itemize}
+\item $\lg ^*n$ denotes iterated logrithm.
+\item $\lg^{(i)}n$ defined as above with $f(n)=\lg n$. 
+\end{itemize}
+\begin{equation}
+\lg^* n = \min \{ i\ge 0| \lg^{(i)}n \le 1\}
+\end{equation}
+\end{frame}
+
+\begin{frame}{}
+
+$$
+\begin{array}{rrr}
+n & \lg n & \lg ^*n \\
+2 & \lg 2 = 1 & \lg^*2 = 1 \\
+4 & \lg 4 = 2 & \lg^*4 = 2 \\
+16 & \lg 16 = 4 & \lg ^* 16 = 3\\
+65536 & \lg 65536 = 16 & \lg ^* 65536 = 4\\
+2^{65536} & \lg 2^{65536} = 65536 & \lg^* 2^{65536} = 5
+\end{array}
+$$
+$\lg ^*n$ is a very very slow growing function. 
+
+Since the number of observable universe is estimated to be about $10^{80}$
+atoms, and $10^{80}<< 2^{65536}$. We rarely encounter an input size $n$
+s.t. $\lg^*n>5$. 
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Define the function $A_k(j)$}
+For $k\ge0$ and $j\ge 1$,
+\begin{equation}
+A_k(j) = \left \{
+\begin{array}{ll}
+j+1 & {\rm \ if \ } k=0 \\
+A_{k-1}^{(j+1)}(j) & {\rm \ if \ } k\ge 1
+\end{array}
+\right.
+\end{equation}
+where $A_{k-1}^{(j+1)}(j)$ functional-iterated notation,
+\begin{eqnarray}
+A_{k-1}^{(0)}(j) &=& j {\rm \ and}\\
+A_{k-1}^{(i)}(j) &=& A_{k-1}(A_{k-1}^{(i-1)}(j)) {\rm \ for\ } i\ge 1.
+\end{eqnarray}
+$k$ the level of function $A$. 
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma 2}: For any integer $j\ge 1$, we have $A_1(j)=2j+1$. \\
+{\bf Proof} Induction on $i$ to show that $A_0^{(i)}(j)=j+i$. \\
+Base: $A_0^{(0)}(j)=j=j+0$. \\
+Assume that $A_0^{(i-1)}(j)=j+(i-1)$. \\
+\begin{eqnarray}
+A_0^{(i)}(j) &=& A_0(A_0^{(i-1)}(j))\\
+ & = & A_0(j+(i-1)) \\
+ & = & (j+(i-1))+1 \\
+ & = & j+i.
+\end{eqnarray}
+\end{frame}
+
+\begin{frame}{}
+
+Finally
+\begin{eqnarray} 
+A_1(j) &=& A_0^{(j+1)}(j) \\
+ &=& j+(j+1) \\
+ &=& 2j+1
+\end{eqnarray}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma 3}: For any integer $j\ge 1$, we have $A_2(j)=2^{(j+1)}(j+1)-1$. \\
+{\bf Proof} Induction on $i$ to show that $A_1^{(i)}(j)=2^i(j+1)-1$. \\
+For the base case: $A_1^{(0)}(j)=j=2^0(j+1)-1$. \\
+For the inductive step: Assume that $A_1^{(i-1)}(j)=2^{i-1}(j+1)-1$. \\
+Then 
+\begin{eqnarray*}
+A_1^{(i)}(j) &=& A_1(A_1^{(i-1)}(j)) \\
+  &=& A_1(2^{(i-1)}(j+1)-1) \\
+  &=& 2(2^{i-1}(j+1)-1)+1 \\
+  &=& 2^i(j+1)-2+1 \\
+  &=& 2^i(j+1) -1
+\end{eqnarray*}
+Finally 
+\begin{eqnarray*}
+A_2(j) &=& A_1^{(j+1)}(j) \\
+  &=& 2^{j+1}(j+1)-1
+\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{How quickly $A_k(j)$ grows, Look at $A_k(1)$ for level 0, 1, 2, 3, and 4.}
+\begin{small}
+\begin{eqnarray*}
+A_0^{(1)} &=& 1+1 = 2, 
+A_1(1) = 2\cdot 1 + 1 = 3 \\
+A_2(1) &=& 2^{1+1}\cdot (1+1) - 1 = 7 \\
+A_3(1) &=& A_2^{(2)}(1) = A_2(A_2(1)) = A_2(7) \\
+ &=& 2^8\cdot 8 -1 \\
+A_4(1) &=& A_3^{(2)} (1) = A_3(A_3(1)) = A_3(2047) \\
+ &=& A_2 ^{(2048)}(2047) \\
+ &>>& A_(2047)=2^{2048}\cdot2048-1 > 2^{2048} \\
+ &=& (2^4)^{512} 
+ = 16^{512} 
+ >> 10^{80}
+\end{eqnarray*}
+\end{small}
+Much greater than the estimated number of atoms in the observable unserve. 
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{The Inverse of $A_k{(n)}$, $n\ge 0$}
+\begin{equation}
+\alpha(n)=\min\{k: A_k(1)\ge n\}
+\end{equation}
+Or $\alpha (n)$ is the lowest level $k$, s.t. $A_k(1)$ is at least $n$. 
+$$
+\alpha(n) = \left\{
+\begin{array}{ll}
+0 & 0\le n \le 2 \\
+1 & n=3 \\
+2 & 4\le n \le 7 \\
+3 & 8\le n \le 2047 \\
+4 & 2048 \le n \le A_4(1)
+\end{array}
+\right.
+$$
+So $\alpha(n)\le 4$ for all practical purpose. 
+\end{frame}
+
+\begin{frame}{}
+
+To show $O(m\alpha(n))$ bounds the running time of the disjoint-Set operation. 
+
+{\bf Lemma 4}: $\forall$ nodes $x$, we have rank[$x$]$\le$rank$[p[x]]$ with strict inequality
+$x\ne p[x]$; and from then on, rank$[x]$ does not change. The value of rank$[p[x]]$ 
+monotonically increase over time. 
+
+{\bf Corollary 5}: As we follow the path from any node toward a root, the node ranks 
+strictly increase. 
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma 6}: Every node has rank at most $n-1$. \\
+{\small (A weak bound, a tight bound will be $\lfloor \lg n\rfloor$.) }\\
+{\bf Proof} For each node, rank starts 0 (initialization, make a node a set). \\
+It increases only upon {\sc Link} operation. There are $n-1$ {\sc Union} so
+ there are at most $n-1$ {\sc Link} operations. \\
+Each {\sc Link} either leaves all ranks alone or increase some nodes' rank by 1. \\
+Thus all ranks are at most $n-1$.  \\
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\Large Prove the Time Bound}
+
+\centerline{\large Amortized Analysis}
+
+%\centerline{\large Look at {\sc Link} operations}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma 7}: Suppose we convert a sequence of $S'$ of $m'$ {\sc Make-Set}, {\sc Union}, and
+{\sc Find-Set} operations into a sequence $S$ of $m$ {\sc Make-Set}, {\sc Link}, and
+{\sc Find-Set} by turing each {\sc Union} into two {\sc Find-Set} followed by a {\sc Link}.
+The if sequence $S$ runs in $O(m(\alpha n))$ time, sequence $S'$ runs in $O(m'\alpha(n))$
+time. \\
+{\bf Proof} {\sc Union} in sequence $S'$ is converted into 3 operations in $S$. We have
+$m'\le m\le 3m'$, thus $m=O(m')$. An $O(m\alpha(m))$ time bound for $S$ implies $O(m'\alpha(m))$
+time bound for $S'$.
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Potential Function}
+\begin{itemize}
+\item $\phi_q(x)$: a potential assigned to each node $x$ in the disjoint-set forest after $q$
+ operations. 
+\item $\Phi_q=\sum_x\phi(x)$: the potential for the entire forest after $q$ operations. 
+\item The forest is empty prior the first operation, $\Phi_0=0$. 
+\item $\phi_q(x)$: if $x$ is a tree root after the $q$th operation or if $rank[x]=0$,
+ then $\phi_q(x)=\alpha(n)\cdot rank[x]$. 
+\item If $x$ is not a root and $rank[x]\ge 1, \ldots$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large $x$ is not a root and $rank[x]\ge 1$}
+\ \\
+\centerline{Define 2 auxiliary functions on $x$,}
+\begin{equation}level(x)=\max \{k:rank[p[x]]\ge A_k(rank[x])\}\end{equation}
+\begin{equation}iter(x)=\max\{ i:rank[p[x]]\ge A_{level(x)}^{(i)}(rank[x])\}\end{equation}
+\end{frame}
+
+\begin{frame}{}
+
+$$level(x)=\max \{k:rank[p[x]]\ge A_k(rank[x])\}$$
+$level(x)$: Greatest level $k$ for which $A_k$, applied to $x$'s rank, is
+ no greater than $x$'s parent's rank. \\
+{\bf Claim 1} $0\le level(x)<\alpha(n)$\\
+{\bf proof} 
+\begin{eqnarray*}
+rank[p[x]] &\ge& rank[x]+1 {\rm \ \ by\ Lemma\ 4}\\
+  &=& A_0(rank[x]) {\rm \ \ by\ definition\ of\ }A_0(j)
+\end{eqnarray*}
+That implies $level(x)\ge 0$. 
+\begin{eqnarray*}
+A_{\alpha(n)}(rank[x]) &\ge& A_{\alpha(n)(1)} \\
+ &\ge& n \\
+ & > & rank[p[x]]
+\end{eqnarray*}
+That implies $level(x)<\alpha(n)$. 
+\end{frame}
+
+\begin{frame}{}
+
+$$iter(x)=\max\{ i:rank[p[x]]\ge A_{level(x)}^{(i)}(rank[x])\}$$
+$iter(x)$: The largest number of times we can iteratively apply $A_{level(x)}$,
+ applied to $x$'s rank before we get a value greater than $x$'s
+ parent's rank. \\
+{\bf Claim 2}: $1\le iter(x)\le rank[x]$ \\
+{\bf Proof}: 
+\begin{eqnarray*}
+rank[p[x]] &\ge& A_{level(x)}(rank[x]) {\rm\ \ by\ definition\ of\ }level(x)\\
+ &=& A_{level(x)}^{(1)} (rank[x]) {\rm\ \ by\ definition\ of\ functional\ iteration}
+\end{eqnarray*}
+So $iter(x)\ge 1$. 
+\begin{eqnarray*}
+A_{level(x)}^{(rank[x]+1)}(rank[x]) &=& A_{level(x)+1}(rank[x]) {\rm\ \ by\ definition\ of\ }A_k(j)\\
+ &>& rank[p[x]] {\rm\ \ by\ definition\ of\ } level(x)
+\end{eqnarray*}
+which implies $iter(x)\le rank[x]$. 
+\end{frame}
+
+\begin{frame}{}
+
+\centerline {\large Potential of node $x$ after $q$ operations}
+\begin{small}
+\begin{equation}
+\phi_q(x)=\left\{
+\begin{array} {ll}
+\alpha(n)\cdot rank[x] & {\rm if\ }x{\rm\ is\ a\ root\ or\ }rank[x]=0 \\
+(\alpha(n)-level(x))\cdot rank(x) - iter(x) & {\rm if\ }x{\rm\ is\ not\ a\ root\ and\ }rank[x]\ge 1
+\end{array}
+\right.
+\end{equation}
+\end{small}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma 8} For every node $x$, and for all operation count $q$,
+$$0\le \phi_q(x)\le\alpha(n)\cdot rank[x]$$
+{\bf Proof} If $x$ is a root or $rank[x]=0$, $\phi_q(x)=\alpha(n)\cdot rank[x]$.
+
+If $x$ is not a root and $rank[k]\ge 1$:
+
+To obtain lower bound on $\phi_q(x)$, we maximize $level[x]$ and $iter(x)$.
+Since $level(x)\le\alpha(n)-1$ (Claim 1) and $iter(x)\le rank[x]$ (Claim 2)
+\begin{eqnarray*}
+\phi_q(x) &\ge& (\alpha(n)-(\alpha(n)-1))\cdot rank[x]-rank[x] \\
+ &=& rank[x]-rank[x] \\
+ &=& 0. 
+\end{eqnarray*}
+To obtain an upper bound on $\phi_q(x)$, we minimize $level(x)$ and $iter(x)$. 
+Since $level(x)\ge 0$ (Calim 1), and $iter(x)\ge 1$ (Claim 2), we have
+\begin{eqnarray*}
+\phi_q(x) &\le& (\alpha(n)-0)\cdot rank[x] -1 \\
+ &=& \alpha(n)\cdot rank[x]-1 \\
+ &<& \alpha(n)\cdot rank[x]
+\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma 9} Let $x$ be a node that is not a root, suppose that $q$th operation is either a {\sc Link}
+ or {\sc Find-Set}. Then after the $q$th operation, $\phi_q(x)\le \phi_{q-1}(x)$. \\
+Moreover, if $rank[x]\ge 1$ and either $level(x)$ or $iter(x)$ changes due to the $q$th operation,
+then $\phi_q(x)\le \phi_{q-1}(x)-1$. That is $x$'s potential cannot increase, and if it has positive
+rank and either $level(x)$ or $iter(x)$ changes, then $x$'s potential drops by at least 1. 
+
+{\bf Proof} Since $x$ is not a root, $q$th operation does not change $rank[x]$, and $n$ does not change after
+ the initial $n$ {\sc Make-Set} operations, $\alpha(n)$ does not change wither. \\
+If $rank[x]=0$, then $\phi_q(x)=\phi_{q-1}(x)=0$. \\
+If $rank[x]\ge 1$: $level(x)$ monotonically increase \\
+If $q$th operation does not change $level(x)$, $iter(x)$ either increases or remains unchanged. \\
+If both $level(x)$ and $iter(x)$ are unchanged, then $\phi_q(x)=\phi_{q-1}(x)$. 
+If $level(x)$ is unchanged and $iter(x)$ increase, $iter(x)$ increases by at least 1,
+ $\phi_q(x)\le \phi_{q-1}(x)-1$. \\
+If $q$th operation increases $level(x)$, it increases by at least 1. Thus $(\alpha(n)-level(x))\cdot rank[x]$
+drops by at least $rank[x]$. \\
+Since $level[x]$ increased, the value of $iter(x)$ might drop. The drop is at most $rank[x]-1$. (by Claim 2)\\
+Thus, the increase in potential due to the change in $iter(x)$ is less than the decrease in potential
+ due to the change in $level(x)$. \\
+In all of the cases, $\phi_q(x)\le\phi_{q-1}(x)-1$. 
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma 10} The amortized cost of each {\sc Make-Set} operation is $O(1)$. 
+
+{\bf Proof} Suppose the $q$th operation is {\sc Make-Set}(x). This operation creates node
+$x$ with rank 0, so that $\phi_q(x)=0$.
+No other ranks or potentials change, so $\Phi_q=\Phi_{q-1}$. \\
+The actual cost is of the {\sc Make-Set} operations is $O(1)$. 
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma 11} The amortized cost of each {\sc Link} operation is $O(\alpha(n))$. 
+
+{\bf Proof} The $q$th operation is {\sc Link}. The actually cost is the {\sc Link}
+operation is $O(1)$. Wlog that the {\sc Link} makes $y$ the parent of $x$. \\
+The nodes whose potentials may change are $x$, $y$, and the children of $y$. \\
+To show that the only node whose potential can increase due to the {\sc Link}
+is $y$, and the increase is at most $\alpha(n)$. \\
+\begin{itemize}
+\item By Lemma 9, any node of $y$'s children cannot have its potential increase due to the {\sc Link.}
+\item $x$ was a root before $q$th operation, $\phi_{q-1}(x)=\alpha(n)\cdot rank[x]$. If $rank[x]=0$,
+then $\phi_q(x)=\phi_{q-1}(x)=0$. Otherwise $\phi_q(x)=(\alpha(n)-level(x))\cdot rank[x]-iter(x)$
+$<\alpha(n)\cdot rank[x]$.
+\item $y$ was the root, $\phi_{q-1}(y)=\alpha(n)\cdot rank[y]$. $y$ is still a root after the {\sc Link}
+operation. After the {\sc Link} operation, $y$'s rank increases by 1 or remains the same. Thus
+either $\phi_q(y)=\phi_{q-1}(y)$ or $\phi_q=\phi_{q-1}(y)+\alpha(n)$. 
+\end{itemize}
+The amortized cost is $O(1)$ + $O(\alpha(n))$ = $O(\alpha(n))$. 
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma 12} The amortized cost of each {\sc Find-Set} operation is $O(\alpha(n))$. 
+
+{\bf Proof} $q$th operation is {\sc Find-Set} and that the find path contains $s$ nodes. The
+actual cost is $O(s)$. \\
+We show that \\
+1. no node's potential increases due to the Find-Set and \\
+2. at least $\max(0,s-(\alpha(n)+2))$ nodes on the find path have their potential decrease by at
+ least 1. \\
+``No node's potential increase" $\forall$ nodes except the root, by Lemma 9. \\
+If $x$ is the root, then its potential is $\alpha(n)\cdot rank[x]$, which does not change. \\
+
+To show that at least $\max(0,s-(\alpha(n)+2))$ node have their potential decrease by at least one. \\
+$x$: a node on the find path that $rank[x]>0$ and $x$ is followed somewhere on the find path by another
+ node $y$ that is not a root, where $level(y)=level(x)$ just before the {\sc Find-Set} operation.  \\
+At most $\alpha(n)+2$ nodes on the path do not satisfy the constraints on $x$. The first node has
+ rank 0, the last node is the root, and the last node $w$ on the path for which $level(w)=k$, $k=0, 1,
+ 2, \ldots, \alpha(n)-1$. \\
+
+Fix such a node $x$. Let $k=level(x)=level(y)$. Before path compression, we have
+\begin{eqnarray*}
+rank[p[x]] &\ge& A_k^{(iter(x))}(rank[x]) ({\rm \ by\ definition\ of\ }iter(x)) \\
+rank[p[y]] &\ge& A_k(rank[y]) ({\rm\ by\ definition \ of\ }level(y)) \\
+rank[y] &\ge& rank[p[x]] {\rm\ (by\ Corollary\ 5)}
+\end{eqnarray*} 
+Let $i$ be the value of the $iter(x)$ 
+\begin{eqnarray*}
+rank[p[y]] &\ge& A_k(rank[y]) \\
+ &\ge& A_k(rank[p[x]]) \\
+ &\ge& A_k(A_k^{(iter(x))}(rank[x])) \\
+ &=& A_k^{(i+1)}(rank[x])
+\end{eqnarray*}
+After path compression, $p[x]=p[y]$, thus $rank[p[x]]=rank[p[y]]$. $rank[p[x]]\ge A_k^{i+1}(rank[x])$.
+$inter[x]$ increases to at least $i+1$, or $level(x)$ increases by 1 (if $inter(x)$ increases to at least
+ $rank[x]+1$). In either case, we have $\phi_q(x)\le \phi_{q-1}(x)-1$. 
+
+The amortized cost = actual cost plus the change in potential. Actual cost is $O(s)$.
+Potential change (decrease) by at lease $\max(0,s-(\alpha(n)+2))$ which is at most
+$O(s)-(s-(\alpha(n)+2))$ = $O(\alpha(n))$
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Theorem 13} A sequence of $m$ {\sc Make-Set}, {\sc Union}, and {\sc Find-Set} operations, $n$
+of which are {\sc Make-Set} operations, can be performed on a disjoint-set forest with union by rank
+ and path compression in worst-case time $O(m\alpha(n))$. 
+
+{\bf Proof} By Lemmas 7, 10, 11, and 12. 
+\end{frame}
+\end{document}
+\begin{frame}{}
+\centerline{\Large Analysis }
+\centerline{\Large of }
+\centerline{\Large union by rank with path compression}
+\centerline{\large Ackermann's function and its inverse}
+\end{frame}
+
+\begin{frame}{}
+\centerline{Repeated exponentiation}
+%\begin{itemize}
+%\item 
+For an integer $i\ge 0$, 
+%$$ 2^{2^{\cdot^{\cdot^{\cdot^{2}}}}} $$
+$$ 2^ {
+\left.
+2^{\cdot^{\cdot^{\cdot^{2}}}} 
+\right \}i}$$
+stands for the function $g(i)$, defined recursively by
+$$
+g(i) = 
+\left \{
+\begin{array}{lll}
+2^1 & {\rm if } & i=0, \\
+2^2 & {\rm if } & i=1, \\
+2^{g(i-1)} & {\rm if } & i>1.
+\end{array}
+\right.
+$$
+The parameter $i$ gives the ``height of the stack of 2's'' that
+make up the exponent.  
+%\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+$$ 2^ {
+\left.
+2^{\cdot^{\cdot^{\cdot^{2}}}} 
+\right \}4} = 2^{2^{2^{2^{2}}}} = 2^{65536}
+$$
+$g(i)$ is a function that grows very fast.
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Define $\lg^*$ in terms of $\lg^{(i)}$, $i\ge 0$}
+$$
+\lg^{(i)} n = \left \{
+\begin{array}{lll}
+n & {\rm if \ }i=0, & \\
+\lg(\lg^{(i-1)} n) & {\rm if \ }i>0 {\rm \ and\ }\lg^{(i-1)}n>0 \\
+{\rm undefined\ }&{\rm if\ }i>0{\rm \ and\ }\lg^{(i-1)}n\le 0 {\rm \ or
+ \ }\lg^{(i-1)}n{\rm \ is\ undefined};
+\end{array}
+\right.
+$$
+$ \lg^*n=\min\{i\ge 0:\lg^{(i)}n\le 1\} $
+$\lg^* n$ function is the inverse of repeated exponentation
+$$
+ 2^{\left. 2^{\cdot^{\cdot^{\cdot^{2}}}}\right \}k} =n, \ \ \ 
+\lg^* 
+ 2^{\left. 2^{\cdot^{\cdot^{\cdot^{2}}}}\right \}k} = k+1
+$$
+\end{frame}
+
+\begin{frame}{}
+\centerline{\bf Ackermann's function}
+For integers $i,j\ge 1$
+$$
+\left .
+\begin{array}{llll}
+A(1,j) & = & 2^j & {\rm for\ }j\ge 1, \\
+A(i,1) & = & A(i-1,2) & {\rm for\ }i\ge 2, \\
+A(i,j) & = & A(i-1,A(i,j-1)) & {\rm for\ }i,j\ge 2.
+\end{array}
+\right .
+$$
+\end{frame}
+
+\begin{frame}{}
+\begin{tabular}{l | llll}
+      &  $j=1 $  & $j=2$ & $j=3$ & $j=4$ \\ \hline
+$i=1$ &  $2^1$   & $2^2$ & $2^3$ & $2^4$ \\
+$i=2$ & $2^2$ & $2^{2^2}$ & $2^{2^{2^2}}$ & $2^{2^{2^{2^2}}}$ \\
+$i=3$ & $2^{2^2}$ & $2^{\left. {2^{\cdot^{\cdot^{\cdot^2}}}}\right \} 16}$ & & 
+\end{tabular}
+\begin{itemize}
+\item $A(i,j)$ grows much faster than $2^{{\cdot^{\cdot}}\}j}$ \\
+\item The inverse of the Ackermann's function 
+$$ \alpha(m,n) = \min\{i\ge 1: A(i,\lfloor m/n\rfloor) > \lg n\}$$ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\bf Observation}
+\begin{itemize}
+\item If we fix $n$, then as $m$ increases, the function $\alpha(m,n)$ is
+ monotonically decrease. 
+  \begin{itemize}
+  \item $\lfloor m/n\rfloor$ monotocnically increasing as $m$ increasing.  
+  \item since $n$ is fixed, the smallest $i$ needed to bring
+    $A(i,\lfloor m/n\rfloor)$ above $\lg n$ monotonically decreasing as $m$
+    increasing, 
+    (thuse $\alpha(m,n)$ monotonically decreasing).  
+  \end{itemize}
+\item Given $n$ elements, as the number of operations $m$ increasing,
+ we would expect the average find-path length to decrease due to
+ path compression.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\large Why $\alpha(m,n)\le 4$ for all practical purpose?}
+\begin{itemize}
+\item $A(i,\lfloor m/n\rfloor) \ge A(i,1)$ since $m/n\ge 1$.
+\item $A(4,\lfloor m/n\rfloor) \ge A(4,1)$.
+\item $A(4,1)=A(3,2)$ = $2^{\left.{2^{\cdot^{\cdot^{\cdot^{2}}}}}\right\}16 }$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline {\large \bf To show the $O(m\lg^* n)$ bound}
+{\it \bf Lemma 22.2} For all nodes $x$, we have $rank[x]\le rank[p[x]]$,
+with strictly inequality if $x\ne p[x]$.  The value of $rank[x]$ is
+ initially 0 and incrases through time until $x\ne p[x]$; from then on,
+ $rank[x]$ does not change.  The value of $rank[p[x]]$ is a monotonically
+ increasing function of time.  
+\end{frame}
+
+\begin{frame}{}
+{\it \bf Lemma 22.3} For all tree roots $x$, size($x$)$\ge 2^{rank[x]}$. \\
+{\bf Proof} The proof is by induction on the number of {\sc Link} 
+ operations.  \\
+Basis: The lemma is true before the first {\sc Link}, since ranks are 
+ initially 0 and each tree contains at least one node.  \\
+Inductive step: Assume that the lemma holds before performing the operation
+ {\sc Link}($x,y$).  Let $rank$ ($size$)
+ denote the the rank (size) just before the {\sc Link},
+ and let $rank'$ ($size'$) denote the rank (size) just after the {\sc Link}.\\
+If $rank[x]\ne rank[y]$, assume wlog that $rank[x]<rank[y]$.  $y$ is the
+ root of the tree formed by the {\sc Link} operation, and \\
+\end{frame}
+
+\begin{frame}{}
+\begin{eqnarray*}
+size'(y) &=& size(x)+size(y) \\
+ &\ge& 2^{rank[x]}+2^{rank[y]} \\
+ &\ge& 2^{rank[y]} \\
+ &=& 2^{rank'[y]}.
+\end{eqnarray*}
+Note: no ranks or sizes change for any nodes other than $y$. \\
+If $rank[x]=rank[y]$, node $y$ is root of the new tree,
+\begin{eqnarray*}
+size'(y) &=& size(x)+size(y) \\
+ &\ge& 2^{rank[x]}+2^{rank[y]} \\
+ &=& 2^{rank[y]+1} \\
+ &=& 2^{rank'[y]}
+\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{}
+{\it \bf Lemma 22.4} For any integer $r\ge 0$, there are at most
+ $\frac{n}{2^r}$ nodes of rank $r$. \\
+{\it \bf Proof}
+Fix a particular value of $r$.  
+When we assign a rank $r$ to a node $x$, we attach a label $x$ to
+ all nodes in the tree rooted $x$.  \\
+There are at least $2^r$ are labeled each time.  \\
+If the root of the tree containing node $x$ changes, rank of the 
+new root is at least $r+1$.  Since we assign labels only when 
+a root is assigned a rank $r$, no nodes in the new tree is labeled.  \\
+Thus each node is labeled at most once, when its root is first assigned
+ rank $r$.  
+There are at most $n$ labeled nodes.  There are at least $2^r$ labels
+ assigned for each node of rank $r$. \\
+If there were more than $n/2^r$ nodes of rank $r$, we would have
+ more than $2^r\cdot\frac{n}{2^r}$ nodes are labeled, a contradiction.  
+\end{frame}
+
+\begin{frame}{}
+{\bf \it Corollary 22.5} Every node has rank at most $\lfloor \lg n\rfloor$.\\
+{\it \bf Proof} If $r>\lg n$, then there are at most $n/2^r <1$ nodes
+ of rank $r$.  Since rank are natural numbers, corollary follows.  
+\end{frame}
+
+\begin{frame}{}
+{\bf \it Lemma 22.6} Suppose we convert a sequence $S'$ of $m'$ {\sc Make-Set},
+{\sc Union}, and {\sc Find-Set} in to a sequence $S$ of $m$ {\sc Make-Set},
+{\sc Union}, and {\sc Find-Set} by turing each {\sc Union} into two 
+{\sc Find-Set} operations followed by a {\sc Link}.  Then if sequence
+ $S$ runs in $O(m\lg^*n)$ time, sequence $S'$ runs in $O(m'\lg^*n)$ times. \\
+{\it \bf Proof} $m'\le m\le 3m'$.
+\end{frame}
+
+\begin{frame}{}
+{\it\bf Theorem 22.7} A sequence of $m$ Make-Set, Link, and Find-Set
+ operations, $n$ of which are Make-Set, can be performed on a disjoint-set
+forest with union by rank and path compression in worst-case time $O(m\lg^*n)$.
+\\
+{\it \bf Proof}
+The charges assessed to Make-Set and Link are $O(n)$ since each one
+takes $O(1)$ and there are $n$ Make-Set and $n-1$ Link.  \\
+To analysis the cost for Find-Set operations \\
+partition node ranks inot {\it\bf blocks} by putting rank $r$ into
+block $\lg^*r$ for $r=0,1,\ldots,\lfloor\lg n\rfloor$.  \\
+for convenience, define for integers $j\ge -1$,
+\end{frame}
+
+\begin{frame}{}
+for convenience, define for integers $j\ge -1$,
+$$
+B(j)=\left \{
+\begin{array}{lll}
+-1 & {\rm if} & j=-1, \\
+1  & {\rm if} & j=0, \\
+2  & {\rm if} & j=1, \\
+2^{\left. 2^{\cdot^{\cdot{\cdot{2}}}} \right\}j-1} &{\rm if} & j\ge 2. 
+\end{array}
+\right.
+$$
+for $j=0,1,\ldots,\lg^*n-1$, the $j$th block consists of the set of
+ranks $\{B(j-1)+1,B(j-1)+2,\ldots,B(j)\}$.
+\end{frame}
+
+\begin{frame}{}
+\begin{eqnarray*}
+B(-1) &=& -1 \\
+B(0) &=& 1 \\
+B(1) &=& 2 \\
+B(2) &=& 4 \\
+B(3) &=& 16 \\
+B(4) &=& 2^{16}=65536 \\
+B(5) &=& 2^{65536} \\
+\lg^*n & & n
+\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{}
+Two types of the charges for a Find-Set operation: {\it\bf block charges}
+and {\it\bf path charges}.   
+\begin{small}
+\begin{itemize}
+\item block charge: A Find-Path finds a path $x_0,x_1,\ldots,x_l$.
+For $j=0,1,\ldots,\lg^*n-1$, assess one block charge to the last node
+ with rank in block $j$ on the path.  Also assess one block charge to the
+child of the root, i.e., to $x_{l-1}$.  
+\item Or we say assess one block charge to $x_i$ that $p[x_i]=x_l$ or 
+ $\lg^*rank[x_i]<\lg^*rank[x_{i+1}]$.
+\item path charge: each node on the find path for which we do not assess
+ a block charge, we assess one path charge.  
+\item Total cost is block charges + path charges.  
+\end{itemize}
+\end{small}
+\end{frame}
+
+\begin{frame}{}
+{\bf Once a node other than the root ot its child is assessed block charge,
+it will never again be assessed path charges.} 
+\begin{small}
+\begin{itemize}
+\item When path compression, rank of $x_i$, $p[x_i]\ne x_l$, does not change.
+\item rank of new parent of $x_i$ is strictly greater than old parent of $x_i$.
+%(because $x_i$ is the last node in block $j$.) 
+\item difference between $\lg^*rank[p[x_i]]$ and $\lg^*rank[x_i]$ is
+ monotonically increasing function of time.  
+\item once $x_i$ and its parent have rank of different vlocks, they will 
+ always have ranks in different blocks, thus no block charge any more.  
+\end{itemize}
+\end{small}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\bf To bound the block charge}
+\begin{itemize}
+\item there is a charge for each block
+\item there are 0 to $\lg^*n-1$ blocks thus at most $\lg^*n+1$ block charges 
+ for each Find-Set.  
+\item there are at most $m(\lg^*n+1)$ block charges.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+\centerline{\bf To Bound the Path Charges}
+\begin{itemize}
+\item To maximize the path charge for a node $x_i$.  
+\item After pathe compression $p[x_i]$ and $x_i$ are in the same block so
+ $x_i$ could receive next path charge.  
+\item to maximize, $x_i$ has lowest rank in its block, namely $B(j-1)+1$, 
+ its parents' rank successively take on the value $B(j-1)+2$,  $B(j-1)+3$,
+\dots, B(j).  
+\item There are $B(j)-B(j-1)-1$ such ranks, then each vertex can has this much
+ path charges.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+{\bf Next, bound the number of nodes that have ranks in block $j$, $j>0$}  \\
+$N(j)$, the number of nodes whose ranks are in block $j$.  By Lemma 22.4
+$$
+N(j) \le \sum^{B(j)}_{r=B(j-1)+1}\frac{n}{2^r}.
+$$
+$j=0$
+\begin{eqnarray*}
+N(0) &=& \frac{n}{2^0} + \frac{n}{2^1} \\
+  &=& \frac{3n}{2} \\
+  &=& \frac{3n}{2B(0)}.
+\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{}
+For $j\ge 1$,
+\begin{eqnarray*}
+N(j) &\le& \frac{n}{2^{B(j-1)+1}}\sum_{r=0}^{B(j)-(B(j-1)+1)}\frac{1}{2^r} \\
+  &<& \frac{n}{2^{B(j-1)+1}}\sum_{r=0}^\infty\frac{1}{2^r}\\
+  &=& \frac{n}{2^{B(j-1)}} \\
+  &=& \frac{n}{B(j)}.  
+\end{eqnarray*}
+We conclude $N(j)\le \frac{3n}{2B(j)}, \forall j\ge 0$.  
+\end{frame}
+
+\begin{frame}{}
+{\bf To finish bounding the path charges}, \\
+summing over all blocks the product of (maximum number of nodes with ranks
+ in the block) and (the maximun number of path charges per node of that
+ block). \\
+$P(n)$, the overall number of path charges
+\begin{eqnarray*}
+P(n) &\le & \sum_{j=0}^{\lg^*n-1}\frac{3n}{2B(j)}(B(j)-B(j-1)-1) \\
+  &\le &\sum_{j=0}^{\lg^*n-1}\frac{3n}{2B(j)}\cdot B(j) \\
+  &=& \frac{3}{2}n\lg^*n.  
+\end{eqnarray*}
+\end{frame}
+
+\begin{frame}{}
+Total number of charges for Find-Set operations, $O(m(\lg^*n+1)+n\lg^*n)$.
+which is $O(n\lg^*n)$ since $m>n$. \\
+This concludes the proof.  
+\end{frame}
+\end{document}
