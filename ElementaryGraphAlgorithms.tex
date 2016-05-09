@@ -1,0 +1,704 @@
+\documentclass{beamer}
+\usepackage{amsmath,amssymb}
+\usepackage{epsfig}
+\begin{document}
+
+% include the main file
+\begin{frame}{}
+
+\centerline{\Large  Graph Algorithm}
+\begin{itemize}
+\item Graph, a pervasive data structure in computer science. Hundreds of interesting computational
+ problems defined in terms of graph.
+\item A graph $G=(V,E)$, $V$ set of vertices $\{v_1,v_2,\ldots,v_n\}$, 
+ $E$ set of edges $\{(u,v):u,v\in V\}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large A graph $G=(V,E)$}
+$V$ a set of vertices, $|V|$: number of vertices. \\
+$E$ a set of edges, $|E|$: number of edges.\\
+In the book, it might uses $V$ to represent $|V|$ and $E$ to represent $|E|$. \\
+Time complexity is defined in terms of the two variables $V$ and $E$. \\
+Vertex set of a graph $G$: $V[G]$, edge set $E[G]$.  
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Representation of Graphs}
+\begin{small}
+\begin{itemize}
+\item Adjacency list,
+\begin{itemize}
+\item  provide a compact way to represent sparse graph ($|E|$ is much
+ less than $|V|^2$)
+\item Adjacency matrix, $G=(V,E)$ consists of an array $Adj$ of $|V|$ lists.
+\item For each $u\in V$, $Adj[u]$ contains pointers to all the
+ vertices $v$, s.t.,
+  $(u,v)\in E$.  
+\item $Adj[u]$ consists of all the vertices adjacent to $u$ in
+ $G$.  
+\end{itemize}
+\end{itemize}
+\end{small}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{Adjacency Matrix}
+\begin{itemize}
+\item $G=(V,E)$, vertices are numbered $1, 2, \ldots, |V|$.  
+\item A $|V|\times |V|$ matrix $A=(a_{i,j})$ s.t., 
+$$
+a_{i,j} = \left \{
+\begin{array}{ll}
+1 & {\rm if\ } (i,j) \in E \\
+0 & {\rm otherwise}
+\end{array}
+\right.
+$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item A graph is directed, edges are arcs.  
+\item Weighted, edges has an associated weight, 
+\item weight function : $w:E\rightarrow R$,
+\item $w(u,v)$: weight of edge $(u,v)\in E$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\Large Minimum Spanning Tree}
+\begin{itemize}
+\item Design of electronic circuit, to connect $n$ pings, try to use the least 
+ amount of wire, there are $n-1$ wires.
+\item Model the problem as a weighted graph $G=(V,E)$,
+ weights are distance between pings.  
+\item Find a spanning tree $T$ that total weight $w(T)=\sum_{(u,v)\in T}w(u,v)$
+ is the least.  
+\item spanning tree, the tree span the graph,
+\item the least cost, minimum-spanning-tree problem.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{Growing a minimum spanning tree}
+\begin{itemize}
+\item Input: a connected, undirected graph $G=(V,E)$,
+\item with weight function $w:E\rightarrow R$. 
+\item wish to find the minimum spanning tree of $G$. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{Greedy Strategy, A ``Generic Strategy''}
+\begin{itemize}
+\item Grwoing a minimum spanning tree one at a time. 
+\item maintain the loop invariant, ``prior to each iteration, $A$ is a subset of some minimum spanning tree''. 
+\item At each step, determine an edge $(u,v)$ that can be added to $A$ without violating the invariant ($A\cup \{(u,v)\}$ is also a subset of the
+ minimum spanning tree). 
+\item $(u,v)$ a safe edge of $A$. 
+\item Keep on inserting safe edges until MST is formed. 
+\item Tricky part is to find a safe edge. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Some definitions}
+\begin{itemize}
+\item A {\it \bf cut} $(S,V-S)$ of an undirected graph $G=(V,E)$ is a 
+ partition of $V$.  
+\item An edge $(u,v)\in E$ {\it\bf crosses} the cut $(S,V-S)$ if one of its
+ endpoints is in $S$ and and the other is in $V-S$.  
+\item A cut {\it \bf respects} the set $A$ of edges if no edges in $A$ crosses
+ the cut.  
+\item An edge is a {\it \bf light edge} crossing a cut if its weight is the
+ minimum of any edge crossing the cut.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Theorem}: Let $G=(V,E)$ be a connected undirected graph with a 
+real-value weight function $w$ defined on $E$.  Let $A$ be a subset of $E$
+ that is included in some minimum spanning tree for $G$, let $(S,V-S)$ be any
+ cut of $G$ that respects $A$, and let $(u,v)$ be a light edge crossing
+ $(S,V-S)$.  The edge $(u.v)$ is safe for $A$.  
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Proof} Let $T$ be an minimum spanning tree that includes $A$ and assume
+ that $T$ does not contain the light edge $(u,v)$.  \\
+We shall construct another minimum spanning tree $T'$ that includes
+ $A\cup \{(u,v)\}$. \\
+Since $T$ does not include $(u,v)$, inserting $(u,v)$ forms a cycle with
+ the edges on the path $p$ from $u$ to $v$ in $T$. \\
+$u$ and $v$ are on opposite sides of the cut $(S,V-S)$, there must be an edge on
+ the path crosses the cut $(S,V-S)$.  Let $(x,y)$ be the edge. \\
+Note that both $(x,y)$ and $(u,v)$ are edge crossing and $(u,v)$ is the light edge. 
+\end{frame}
+
+\begin{frame}{}
+
+Removing $(x,y)$ breaks the tree $T$; adding $(u,v)$ reconnects a tree $T'$.  
+ We have $T'=T-\{(x,y)\}\cup \{(u,v)\}$.  \\
+\begin{eqnarray*}
+w(T') &=& w(T) - w(x,y) + w(u,v) \\
+  &\le & w(T), {\rm \ \ since\ } (u,v) {\rm\ is\ light}.  
+\end{eqnarray*}
+But $T$ is minimum spanning tree, so $w(T)\le w(T')$; thus $T'$ must
+ be a minimum spanning tree.  \\
+It remain to show that $(u,v)$ is a safe edge for $A$.  We have 
+ $A\subseteq T'$, since $A\subseteq T$ and $(x,y)\notin A$;
+ $A\cup \{(u,v)\}\subseteq T'$.  And, since $T'$ is the minimum
+ spanning tree, $(u,v)$ is safe for $A$.  
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Corollary} Let $G=(V,E)$ be a connected weighted undirected graph.  
+ Let $A$ be a subset of $E$ that is included in some minimum spanning
+ tree of $G$, and let $C$ be a connected component (tree) in the
+ forest $G_A=(V,A)$.  If $(u,v)$ is a light edge connecting $C$ to some 
+ other component in $G_A$, then $(u,v)$ is safe for $A$.  \\
+{\bf proof} The cut $(C,V-C)$ respect $A$, and $(u,v)$ is a light
+edge for the cut.  
+\end{frame}
+
+\begin{frame}{}
+
+\centerline {\large Kruskal's Algorithm}
+\begin{itemize}
+\item Given a weighted undirected graph $G=(V,E)$, preprocess the edges
+\item Maintain a set $A$ that is a forest. 
+\item
+\begin{itemize}
+\item sort the edges according their weights.
+\item put edges in a priority queue
+\end{itemize}
+\item Iteratively do the following,
+\begin{itemize}
+\item Take out the least weight edge, check if it is safe (form cycle?).  
+\item Include the edge if the edge is a safe
+\item until a single tree is formed. 
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Prim's Algorithm}
+\begin{itemize}
+\item Maintain a set $A$ that is a single tree. 
+\item Start with a tree having a single node $s$, 
+\item choose the least-weight  edge connecting the tree to a vertex not in the tree. 
+\item until the a tree connecting all vertices. 
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{Time Complexity}
+\begin{itemize}
+\item Kruskal's Algorithm,
+\begin{itemize} 
+\item Presort or heap operation $O(E\log E)$,
+\item For each edge, check if it is safe, $\alpha(V)$ (two {\sc Find}s). There are at most $E$ edges. 
+\item Insert it into the tree and make two trees in the forest become one, $O(1)$, (a {\sc Union}, $n-1 times$).
+\item Total cost $O(E\log E) + O(E\alpha(V)$
+\end{itemize}
+\item Prim's Algorithm
+\begin{itemize}
+\item $V$ elements stored in the Fibonacci Heap. 
+\item {\sc Extract-Min} can be done in $O(\log n)$ amortized time. 
+\item {\sc Decrease-key} can be done in $O(1)$ amortized time. There are at most $E$ times {\sc Decrease-Key}. 
+\item Total cost is $O(E+V\lg V)$.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Breadth First Search}
+%\centerline {\Large }
+\begin{itemize}
+\item One of the simplest algorithm.
+\item Dijkstra's single source shortest path algorithm and
+ Prim's Minimum Spanning tree algorithm used similar ideas. 
+\item Given $G=(V,E)$ and a distinguished source vertex $s$, bfs systematically
+ explores the edges of $G$ to discover every vertex reachable from $s$.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item Assume the graph is stored in an adjacency list $Adj[\ ]$. 
+\item Each vertex has a color, WHITE, GRAY, BLACK.  All vertex starts
+ with WHITE.  Once discovered, change to non-white.  Need to distingush
+ non-white to ensure the search is in a breadth first manner. Color of
+ $u$ stored in $Color[u]$ 
+\item BFS construct a BFT (breadth first tree).   Initial contains a root $s$.
+ Whenever a white vertex $v$ is discovered while scanning the neighborhood
+ of $u$, edge $(u,v)$ is added to the tree.  We say $u$ the predecessor of
+ $v$.  Predecessor of $u$ stored in $\pi[u]$.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item in BFT, the distance between $u$ to the source $s$ is stored in
+ $d[u]$.  
+\item BFS needs a first-in, first-out queue $Q$.  
+\end{itemize}
+{\small run through an example}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{small}
+\begin{tabbing}
+WW\=W\=W\=W\=W\=W\=W\=W \kill \\ 
+BFS($G,s$) \\
+1 \> for each vertex $u\in V[G]-\{s\}$ \\
+2 \>\> do $color[u]\leftarrow$ WHITE \\
+3 \>\>\> $d[u]\leftarrow \infty$ \\
+4 \>\>\> $\pi[u] \leftarrow$ NIL \\
+5 \> $color[s]\leftarrow $ GRAY \\
+6 \> $d[s]\leftarrow 0$ \\
+7 \> $\pi[s] \leftarrow $ NIL \\
+8 \> $Q\leftarrow \emptyset$ \\
+9 \> EnQUEUE($Q,s$) \\
+10 \> while $Q\ne \emptyset$ \\
+11 \>\> do $u\leftarrow$ DEQUEUE($Q$) \\
+12 \>\>\> for each $v\in Adj[u]$ \\
+13 \>\>\>\> do if $color[v]=$ WHITE \\
+14 \>\>\>\>\> then $color[v]\leftarrow $ GRAY \\
+15 \>\>\>\>\>\> $d[v]\leftarrow d[u]+1$ \\
+16 \>\>\>\>\>\> $\pi[v]\leftarrow u$ \\
+17 \>\>\>\>\>\> ENQUEUE($Q,v$) \\
+18 \>\>\> $color[u]\leftarrow$ BLACK 
+\end{tabbing}
+run through an example.
+\end{small}
+\end{frame}
+
+\begin{frame}{Run Time}
+
+%\centerline{}
+\begin{itemize}
+\item Each vertex enqueued and dequeued at most once, the queue operations
+ take $O(V)$ time.  
+\item List in $Adj[u]$ is scaned when $u$ is colored black.  The length of the
+ list is $O(E)$
+\item total time is $O(V+E)$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Shortest Path}
+
+%\centerline{}
+\begin{itemize}
+\item Define the shortest-path distance $\delta(s,v)$ from $s$ to $v$ the
+ minimum number of edges in any path from $s$ to $v$.  
+\item A path of length $\delta(s,v)$ from $s$ to $v$
+ is said to be a shortest path from $s$ to $v$.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Lemma} Let $G=(V,E)$ be a directed or undirected graph, and 
+ $s\in V$ be an arbitrary vertex.  Then, for any edge $(u,v)\in E$,
+$$\delta(s,v)\le \delta(s,u)+1.$$  
+{\bf Proof} If $u$ is reachable from $s$, then so is $v$.  The shortest path
+from $s$ to $v$ cannot be longer than the shortest path from $s$ to $v$
+followed by the edge $(u,v)$, i.e., $\delta(s,v)\le \delta(s,u)+1$.  \\
+If $u$ is not reachable from $s$, then $\delta(s,u)=\infty$, and the
+ inequlity holds.  
+\end{frame}
+
+\begin{frame}{}
+
+To show that BFS properly computes $d[v]=\delta(s,v)$ for each
+vertex $v\in V$, we first show that $d[v]$ bounds $\delta(s,v)$.\\ 
+{\bf Lemma} Let $G=(V,E)$ be a directed or undirected graph, and suppose
+that bfs run on $G$ from a given source vertex $s\in V$.  
+Then upon termination, for each vertex $v\in V$, the value $d[v]$
+ computed by BFS satisfies $d[v]\ge \delta(s,v)$.  
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Proof} Induction on the number of ENQUEUE operations.  \\
+Inductive hypothesis is $d[v]\ge \delta(s,v)$ for all $v\in V$.  \\
+Basis, immediately after $s$ is enqueued.  Inductive hypothesis is true
+since $d[s]=0=\delta(s,s)$ and $d[v]=\infty \ge \delta(s,v)$ for all 
+$v\in V-\{s\}$.  \\
+\end{frame}
+
+\begin{frame}{}
+
+For inductive step, consider a white vertex $v$ is discovered during the
+search from a vertex $u$.  The inductive hypothesis implies that $d[u]\ge 
+\delta(s,u)$.  From the assignment performed by line 15 and from 
+previous lemma, we have
+\begin{eqnarray*}
+d[v] &=& d[u] +1 \\
+ &\ge& \delta(s,u) +1 \\
+ &\ge& \delta(s,v)
+\end{eqnarray*}
+Vertex $v$ is then enqueued, and it is never enqueued again because it is GRAY.
+$d[v]$ never changes, inductive hypothesis is maintained.  
+\end{frame}
+
+\begin{frame}{}
+
+To show $d[v]=\delta(s,v)$, we first show that at all times, there are at
+most two distinct $d$ values in the queue.  \\
+{\bf Lemma} During the execution of BFS on a graph $G=(V,E)$, the queue
+ $Q$ contains the vertices $<v_1,v_2,\ldots,v_r>$, where $v_1$ is the head of
+ $Q$ and $v_r$ is the tail.  The $d[v_r]\le d[v_1]+1$
+ and $d[v_i]\le d[v_{i+1}]$
+ for $i=1,2,\ldots,r-1$.  \\
+{\bf Proof} Induction in the number of queue operations.  Initially, when
+the queue contains only $s$, the lemma holds.  \\
+For the inductive step, we must prove that the lemma holds after both dequeuing
+and enqueuing a vertex.  \\
+{\it Dequeue} $v_1$ is dequeue and $v_2$ becomes the head.  By inductive
+ hypothesis, $d[v_1]\le d[v_2]$ and $d[v_r]\le d[v_1]+1$, thus $d[v_r]\le
+d[v_2]+1$.  \\
+\end{frame}
+
+\begin{frame}{}
+
+{\it Enqueue} $v$ is enequeued in line 17, it becomes $v_{r+1}$.  At this
+moment, the vertex $u$ has been removed from the queue and we are scanning
+the adjacency list of $u$.  By inductive hypothesis, the new head
+ $v_1$ has $d[v_1] \ge d[u]$.  \\
+Thus $d[v_{r+1}]=d[v]=d[u]+1\le d[v_1]+1$.  \\
+We also have $d[v_r]\le d[u]+1$ and so $d[v_r]\le d[u]+1 = d[v] = d[v_{r+1}]$.
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Coroloary}
+Suppose that vertices $v_i$ and $v_j$ are enqueued during the execution of
+BFS, and that $v_i$ is enqueued before $v_j$.  Then $d[v_i]\le d[v_j]$ at
+the time that $v_j$ is enqueued.  
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Theorem: Correctness of breadth-first search}\\
+Let $G=(V,E)$ be a directed or undirected graph, and suppose that BFS is run
+on $G$ from a given source vertex $s\in V$.  \\
+The BFS discovers every vertex
+$v\in V$ that is reachable from the source $s$, and upon termination,
+$d[v]=\delta(s,v)$ for all $v\in V$. \\
+Moreover, for any vertex $v\ne s$ that is reachable from $s$, one of the 
+ shortest paths from $s$ to $v$ is a shortest from $s$ to $\pi[v]$ followed
+by the edge $(\pi[v],v)$.  
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Proof} Suppose that the theorem is not true.  Some vertex receives
+a $d$ value $\ne$ the shortest path distance.  \\
+Let $v$ be the vertex with minimum $\delta(s,v)$ that receives such
+incorrect $d$ value.  \\
+1. It is obvious $s\ne v$.  2. By previous lemma, $d[v]\ge \delta(s,v)$, 
+ we must have $d[v]>\delta(s,v)$. $v$ must be reachable from $s$ (otherwise
+$\delta(s,v)=\infty\ge d[v]$). \\
+Let $u$ be the vertex immediately preceding $v$ on the shortest path from 
+ $s$ to $v$.  Then we have $$\delta(s,v)=\delta(s,u)+1$$
+Now we have $\delta(s,u)<\delta(s,v)$; because how we choose $v$, we have
+ $d[u]=\delta(s,u)$. Putting all these properties together, we have
+$$d[v]>\delta(s,v)=\delta(s,u)+1=d[u]+1.$$ \\
+\end{frame}
+
+\begin{frame}{}
+
+Now look at the pseudo code.  At the time BFS chooses to dequeue vertex $u$
+ from $Q$ in line 11.  At this time, vertex $v$ is either white, gray, or
+ black.  We show that in each of the cases, we can derive contradiction.  \\
+If $v$ is white: Line 15 set $d[v]=d[u]+1$, contradiction to the inequality.\\
+If $v$ is black, $v$ was already removed from the queue, according to the 
+corollary, $d[v]<d[u]$, contradiction to the inequality. \\
+\end{frame}
+
+\begin{frame}{}
+
+If $v$ is gray, it was graied when $w$ was dequeue.  $w$ was removed from 
+$Q$ earlier than $u$ and $d[v]=d[w]+1$.  From the corollary, $d[w]<d[u]$,
+so we have $d[v]\le d[u]+1$, condicting the equation.  \\
+Thus we conclude $d[v]=\delta(s,v)$ for all $v\in V$.  \\
+To conclude the proof, observe that $\pi[v]=u$, then $d[v]=d[u]+1$.
+Thus we obtain a shortest path from $s$ to $v$ by taking the shortest path
+from $s$ to $\pi[v]$ than follow the edge $(\pi[v],v)$ to v.  
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\bf Breadth First Tree}
+For a graph $G=(V,E)$ with source $s$, we define the {\it predecesor subgraph}
+of $G$ as $G_{\pi}=(V_{\pi},E_{\pi})$, where 
+$$V_{\pi}=\{v\in V:\pi[v]\ne {\rm NIL}\} \cup \{s\}$$
+and
+$$E_{\pi}=\{(\pi[v],v):v\in V_{\pi}-\{s\}.$$
+Predecessor subgraph is a breadth-first tree.  The path from $s$ to $v$
+is unique, and it is the shortest path.  Edges in $E_\pi$ are called the
+tree edges.  
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Depth-first search}
+\begin{small}
+\begin{itemize}
+\item Strategy: to search ``deeper'' in the graph whenever possible.  
+\item Edges are explored out of the most recently discovered
+ vertex $v$ that still has unexplored edges leaving it.  
+\item When there is no way out from $v$, the search ``backtrack'' to the vertex
+from which $v$ was discovered. 
+\item Process continues until we have discovered all the vertices
+ reachable from source.  
+\item If any undiscovered vertex remain, then one of them is sellected as a new
+ source.  
+\end{itemize}
+\end{small}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item Vertex $v$ is discovered while scanning the adjacency list of a discovered
+ vertex $u$, $v$'s predecessor field $\pi[v]=u$.  
+\item DFS produces a predecessor subgraph of $G$, it is a forest.  
+\end{itemize}
+$G_\pi = (V,E_\pi)$, where \\
+$E_\pi=\{(\pi[v],v)\} : v\in V {\rm \ and \ } \pi[v]\ne {\rm NIL}\}$.  \\
+Edges in $E_{\pi}$ are called {\it tree edge}.  
+\end{frame}
+
+\begin{frame}{}
+
+Vertices have color to indicate their states.
+\begin{itemize}
+\item Initially WHITE,
+\item Become GRAY when it is discovered,
+\item Balckened when it is finished, i.e., adjancency list has been
+ examined completely.   
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+DFS {\it timestamps} each vertices, each vertex has two timestamps.
+\begin{itemize}
+\item $d[v]$: the first timestamp, records when $v$ is first discovered.
+\item $f[v]$: records when the search finishes examining $v$'s adj. list. 
+\end{itemize}
+Timestamps are ranged integers ranged from 1 to $2|V|$. \\
+For every $v$, $d[v]<f[v]$.  
+\end{frame}
+
+\begin{frame}{}
+
+\begin{tabbing}
+WW\=W\=W\=W\=W\=W\=W\=W\= \kill \\
+DFS($G$) \\
+1 \> {\bf for} each vertex $u\in V[G]$ \\
+2 \>\> {\bf do}\> $color[u]\leftarrow$ WHITE \\
+3 \>\>\> $\pi[u]\leftarrow$ NIL \\
+4 \> $time \leftarrow 0$ \\
+5 \> {\bf for} each vertex $u\in V[G]$ \\
+6 \> \> {\bf do if} $color[u]=$ WHITE \\
+7 \>\>\> {\bf then} DFS-Visit($u$)
+\end{tabbing}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{tabbing}
+WW\=W\=W\=W\=W\=W\=W\=W\= \kill \\
+DFS-Visit($u$) \\
+1 \> $color[u]\leftarrow$ GRAY \\
+2 \> $time \leftarrow time + 1$ \\
+3 \> $d[u]\leftarrow time$ \\
+4 \> {\bf for} each $v\in Adj[u]$ \\
+5 \> \> {\bf do if} $color[v] = $ WHITE \\
+6 \> \>\> {\bf then} $\pi[v]\leftarrow u$ \\
+7 \> \>\>\> DFS-Visit($v$) \\ 
+8 \> $color\leftarrow$ BLACK \\
+9 \> $f[u]\leftarrow time \leftarrow time +1$
+\end{tabbing}
+run through an example
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item Results depends on the order of vertices examined
+\item depends on what stored in the data structure (the $Adj$ list)
+\item run time is $\Theta(V+E)$.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Properties of the DFS} \\
+\begin{itemize}
+\item Predecessor subgraph $G_{\pi}$ forms a forest. 
+\item $v$ is a decendant of $u$ in the DFS forest iff $v$ is discovered
+ during the time in which $u$ is gray.  
+\item discovery and finishing time have parenthesis structure
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Theorem: Parenthesis theorem} \\
+In any DFS of a (direct or undirected) graph $G=(V,E)$, for any two
+vertices $u$ and $v$, exactly one of the following 3 conditions hold:
+\begin{itemize}
+\item the intervals $[d[u],f[u]]$ and $[d[v],f[v]]$ are entirely disjoint,
+ and neither $u$ nor $v$ are decendant of the other in DFS tree. 
+\item the intervals $[d[u],f[u]]$ is contained entirely within interval
+ $[d[v],f[v]]$, and $u$ is a decendant of $v$ in DFS tree,
+\item the intervals $[d[v],f[v]]$ is contained entirely within interval
+ $[d[u],f[u]]$, and $v$ is a decendant of $u$ in DFS tree.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Proof} if $d[u]<d[v]$, there are two subcases depending on $d[v]<f[u]$
+ or not. \\
+if $d[v]<f[u]$, $v$ is discovered while $u$ was gray.  Thus $v$ is a decendant 
+ of $u$.  Furthermore, after all the outgoing edges of $v$ are explored, the
+ search  return to $u$, $f[v]<d[v]$.  We conclude $[d[v],f[v]]$ is
+ entirely in the interval of $[d[u],f[u]]$.  
+\\ The other case $f[u]<d[v]$. By the inequality $d[u]<f[u]$, we have
+ the two intervals are disjoint.  Thus neither vertices was discovered
+ while the other was gray, and so neither vertex is a decendant of the
+ other.  \\
+The other case that $d[v]<d[u]$ is similar.  
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Corollary: (Nesting of decendant's intervals)} \\
+$v$ is proper decendant of $u$ in DFS forest for a directed
+ of undirected graph $G$ iff \\
+$d[u] < d[v] < f[v] < f[u]$.  
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Theorem: (White-path theorem)} \\
+In a DFS forest of $G=(V,E)$ $v$ is a decendant of $u$ iff at the time
+ $d[u]$ that the search discovers $u$, vertex $v$ can be reached from
+ $u$ along a path consisting entirely of white vertices.  \\ 
+{\bf Proof}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Proof} : \\
+$\Rightarrow$ Assume $v$ is a decendant of $u$.  Let $w$ be any
+vertex on the path between $u$ and $v$.  $w$ is a decendant of $u$.  
+By the corollary, $d[u]<d[w]$ so $w$ is white at time $d[u]$.  \\
+$\Rightarrow$ Suppose that vertex $v$ is reachable from $u$ along a path
+of white vertex at time $d[u]$, but $v$ does not become a decendant
+of $u$ in DFT.  \\
+Without loss of generality, assume that every vertices along the path become
+a decendant of $u$, (otherwise, we can let $v$ be the closest vertex to $u$
+ along the path that does not become a decendant of $u$).  
+Let $w$ be the predecessor of $v$ in the path, so that $w$ is a decendant
+of $u$.  \\
+By Corollary, $f[w]\le f[u]$.  \\
+Note that $v$ must be discovered after $u$ is discovered, but before $w$
+ is finished.  Therefore $d[u]<d[v]<f[w]\le f[u]$.  By previous theorem,
+$[d[v],f[v]]$ is conbtained entirely within the interval $[d[u],f[u]]$.
+By corollary, $v$ myst be decendant of $u$.  
+\end{frame}
+
+\begin{frame}{}
+
+We can define four edge types in terms of the depth-first forest $G_\pi$
+ producedby a DFS on $G$
+\begin{itemize}
+\item {\it Tree edges}: Edges in the DF forest $G_\pi$.   
+\item {\it Back edges}: Edge $(u,v)$ connecting $u$ to an ancestor $v$ in 
+ DF forest.  Self-loop, which may occur in directed graphs, are
+ considered to be back edges. 
+\item {\it Forward edges}: $(u,v)$ are nontree edges connecting a vertex
+ $u$ to a decendant $v$ in DF tree. 
+\item {\it Cross edges}: All other edges.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+\begin{itemize}
+\item DFS can be modified to classify edges as it encounters them.  
+\item Key idea: edge $(u,v)$ can be classified by the color of the vertex
+ $v$ that is reached when the edge is first explored.  
+\begin{small}
+\begin{itemize}
+\item WHITE indicates tree edges
+\item GRAY indicates a back edge
+\item BLACK  indicate foreard or cross edge
+\end{itemize}
+\end{small}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+{\bf Theorem} In a DFS of an undirected graph $G$, every edge of $G$
+is either a tree edge or a back edge. \\ 
+{\bf Proof} Let $(u,v)$be an arbotrary edge of $G$, and suppose without loss of
+generallity that $d[u]<d[v]$.  Then $v$ must be discovered and finished
+before we finieh $u$, since $v$ is in $u$'s adjancency list.  If $(u,v)$ is
+explored first in the direction from $u$ to $v$, the $v$ is discovered
+until that time, otherwise, we could have explored this edge already
+in the direction from $v$ to $u$.  Thus $(u,v)$ become a tree edge.  
+If $(u,v)$ is explored first in th direction from $v$ to $u$, then
+$(u,v)$ is a back edge, since $u$ is till gray at the time the edge
+is first explored.  
+\end{frame}
+
+\begin{frame}{}
+
+\centerline{\large Topological Sort}
+\begin{itemize}
+\item Apply DFS to perform a topological sort of a {\it directed acylic graph},
+ (acyclic: no cycle) or {\em dag}.  
+\item A topological sort of a dag $G=(V,E)$, a linear order of all vertices
+ s.t. if $G$ contains an edge $(u,v)$, then $u$ appears before $v$ in the
+ ordering.  
+\item If the graph is not acyclis, no linear order is possible.  
+\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+
+TOPOLOGICAL-SORT(G) \\
+1. call DFS(G) to compute finishing time $f[v]$ for rach vertex $v$. \\
+2. as each vertex is finished, insert it onto the front of the linked list. \\
+3. return the linked list of vertices.  \\
+{\small run through an example in pp 550}
+\end{frame}
+
+\end{document}
